@@ -86,6 +86,28 @@ INSERT INTO support_teams_dim VALUES
 -- ========================================================================
 
 -- Generate sample support tickets across different product areas, clients, and time periods
+WITH ticket_generator AS (
+    SELECT 
+        ROW_NUMBER() OVER (ORDER BY SEQ4()) as ticket_num,
+        UNIFORM(1, 50, RANDOM()) as client_key,
+        UNIFORM(1, 200, RANDOM()) as user_key,
+        UNIFORM(0, 7, RANDOM()) as product_area_rand,
+        UNIFORM(0, 9, RANDOM()) as feature_rand,
+        UNIFORM(0, 3, RANDOM()) as severity_rand,
+        UNIFORM(0, 4, RANDOM()) as category_rand,
+        UNIFORM(0, 5, RANDOM()) as subcategory_rand,
+        UNIFORM(1, 365, RANDOM()) as days_back,
+        UNIFORM(1, 72, RANDOM()) as resolution_hours,
+        UNIFORM(1, 5, RANDOM()) as satisfaction,
+        UNIFORM(0, 5, RANDOM()) as team_rand,
+        UNIFORM(0, 2, RANDOM()) as impact_rand,
+        UNIFORM(0, 3, RANDOM()) as method_rand,
+        ROUND(UNIFORM(1, 80, RANDOM()) / 10.0, 1) as first_response_hours,
+        RANDOM() as status_rand,
+        RANDOM() as resolved_rand,
+        RANDOM() as escalated_rand
+    FROM TABLE(GENERATOR(ROWCOUNT => 750))
+)
 INSERT INTO support_tickets_fact (
     ticket_id, client_key, user_key, product_area, feature_name, severity_level, 
     category, subcategory, created_date, resolved_date, resolution_time_hours, 
@@ -93,10 +115,10 @@ INSERT INTO support_tickets_fact (
     client_impact, resolution_method, first_response_time_hours
 )
 SELECT 
-    'TKT' || LPAD(ROW_NUMBER() OVER (ORDER BY RANDOM()), 6, '0') as ticket_id,
-    FLOOR(RANDOM() * 50) + 1 as client_key,  -- Random client 1-50
-    FLOOR(RANDOM() * 200) + 1 as user_key,   -- Random user 1-200
-    CASE FLOOR(RANDOM() * 8)
+    'TKT' || LPAD(ticket_num::VARCHAR, 6, '0') as ticket_id,
+    client_key,
+    user_key,
+    CASE product_area_rand
         WHEN 0 THEN 'Claims Processing'
         WHEN 1 THEN 'Denial Management'
         WHEN 2 THEN 'Reporting & Analytics'
@@ -106,7 +128,7 @@ SELECT
         WHEN 6 THEN 'Mobile App'
         ELSE 'API Services'
     END as product_area,
-    CASE FLOOR(RANDOM() * 10)
+    CASE feature_rand
         WHEN 0 THEN 'Batch Claims Upload'
         WHEN 1 THEN 'Appeal Generation'
         WHEN 2 THEN 'Custom Reports'
@@ -118,20 +140,20 @@ SELECT
         WHEN 8 THEN 'REST API'
         ELSE 'Electronic Remittance'
     END as feature_name,
-    CASE FLOOR(RANDOM() * 4)
+    CASE severity_rand
         WHEN 0 THEN 'Critical'
         WHEN 1 THEN 'High'
         WHEN 2 THEN 'Medium'
         ELSE 'Low'
     END as severity_level,
-    CASE FLOOR(RANDOM() * 5)
+    CASE category_rand
         WHEN 0 THEN 'Bug'
         WHEN 1 THEN 'Feature Request'
         WHEN 2 THEN 'How-to'
         WHEN 3 THEN 'Training'
         ELSE 'Configuration'
     END as category,
-    CASE FLOOR(RANDOM() * 6)
+    CASE subcategory_rand
         WHEN 0 THEN 'User Interface Issue'
         WHEN 1 THEN 'Data Processing Error'
         WHEN 2 THEN 'Performance Slow'
@@ -139,25 +161,25 @@ SELECT
         WHEN 4 THEN 'Permission Denied'
         ELSE 'Workflow Question'
     END as subcategory,
-    DATEADD(day, -FLOOR(RANDOM() * 365), CURRENT_DATE()) as created_date,
+    DATEADD(day, -days_back, CURRENT_DATE()) as created_date,
     CASE 
-        WHEN RANDOM() < 0.85 THEN DATEADD(hour, FLOOR(RANDOM() * 72) + 1, DATEADD(day, -FLOOR(RANDOM() * 365), CURRENT_DATE()))
+        WHEN resolved_rand < 0.85 THEN DATEADD(hour, resolution_hours, DATEADD(day, -days_back, CURRENT_DATE()))
         ELSE NULL  -- 15% still open
     END as resolved_date,
     CASE 
-        WHEN RANDOM() < 0.85 THEN ROUND(RANDOM() * 72 + 0.5, 1)  -- 0.5 to 72.5 hours
+        WHEN resolved_rand < 0.85 THEN resolution_hours::DECIMAL(8,2)
         ELSE NULL
     END as resolution_time_hours,
     CASE 
-        WHEN RANDOM() < 0.85 THEN 'Resolved'
-        WHEN RANDOM() < 0.95 THEN 'In Progress'
+        WHEN status_rand < 0.85 THEN 'Resolved'
+        WHEN status_rand < 0.95 THEN 'In Progress'
         ELSE 'Open'
     END as status,
     CASE 
-        WHEN RANDOM() < 0.85 THEN FLOOR(RANDOM() * 5) + 1  -- 1-5 rating
+        WHEN resolved_rand < 0.85 THEN satisfaction
         ELSE NULL
     END as customer_satisfaction_score,
-    CASE FLOOR(RANDOM() * 6)
+    CASE team_rand
         WHEN 0 THEN 'Level 1 Support'
         WHEN 1 THEN 'Level 2 Technical'
         WHEN 2 THEN 'Level 3 Engineering'
@@ -165,23 +187,20 @@ SELECT
         WHEN 4 THEN 'Implementation'
         ELSE 'Data Team'
     END as assigned_team,
-    CASE WHEN RANDOM() < 0.2 THEN TRUE ELSE FALSE END as escalated_flag,
-    CASE FLOOR(RANDOM() * 3)
+    CASE WHEN escalated_rand < 0.2 THEN TRUE ELSE FALSE END as escalated_flag,
+    CASE impact_rand
         WHEN 0 THEN 'Low'
         WHEN 1 THEN 'Medium'
         ELSE 'High'
     END as client_impact,
-    CASE FLOOR(RANDOM() * 4)
+    CASE method_rand
         WHEN 0 THEN 'Phone'
         WHEN 1 THEN 'Email'
         WHEN 2 THEN 'Remote Session'
         ELSE 'Documentation'
     END as resolution_method,
-    ROUND(RANDOM() * 8 + 0.1, 1) as first_response_time_hours  -- 0.1 to 8.1 hours
-FROM (
-    SELECT ROW_NUMBER() OVER (ORDER BY SEQ4()) as rn
-    FROM TABLE(GENERATOR(ROWCOUNT => 750))  -- Generate 750 sample tickets
-);
+    first_response_hours
+FROM ticket_generator;
 
 -- ========================================================================
 -- CREATE INDEXES FOR PERFORMANCE
