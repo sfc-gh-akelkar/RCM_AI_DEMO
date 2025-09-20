@@ -1,0 +1,58 @@
+{
+  "support_analytics_tool": {
+    "tool_spec": {
+      "type": "cortex_analyst_text_to_sql",
+      "name": "Query Support Analytics",
+      "description": "Analyze customer support tickets by product area, client type, resolution metrics, and team performance. Identify support trends and areas needing attention."
+    },
+    "tool_resource": {
+      "semantic_view": "SF_AI_DEMO.DEMO_SCHEMA.SUPPORT_ANALYTICS_VIEW"
+    }
+  },
+  "sample_questions": [
+    {
+      "question": "Which product areas generate the most customer support tickets?",
+      "category": "Product Analysis",
+      "expected_insight": "Claims Processing and Denial Management typically generate 50%+ of all tickets"
+    },
+    {
+      "question": "What's the average resolution time by product area?",
+      "category": "Performance Metrics",
+      "expected_insight": "Simple how-to questions resolve in 2-4 hours, complex bugs take 24-48 hours"
+    },
+    {
+      "question": "Which client types submit the most support tickets?",
+      "category": "Client Segmentation",
+      "expected_insight": "Hospitals and large physician groups typically have higher ticket volumes"
+    },
+    {
+      "question": "Are support tickets increasing or decreasing over time?",
+      "category": "Trend Analysis",
+      "expected_insight": "Shows seasonal patterns and impact of new feature releases"
+    },
+    {
+      "question": "What's our customer satisfaction score by support team?",
+      "category": "Team Performance",
+      "expected_insight": "Customer Success team typically has highest satisfaction scores"
+    },
+    {
+      "question": "Which features have the most bugs reported?",
+      "category": "Product Quality",
+      "expected_insight": "Identifies features needing development attention"
+    },
+    {
+      "question": "How many critical tickets are still open?",
+      "category": "Operational Urgency",
+      "expected_insight": "Shows current critical issues requiring immediate attention"
+    },
+    {
+      "question": "What's the escalation rate by product area?",
+      "category": "Process Analysis",
+      "expected_insight": "Complex features like integrations have higher escalation rates"
+    }
+  ],
+  "instructions_addition": {
+    "response": "When analyzing support ticket data, always segment by product area and client type. Highlight high-priority items like critical tickets and escalated issues. Provide actionable insights for product improvement.",
+    "orchestration": "For support analytics questions, focus on identifying patterns that indicate product issues, training needs, or process improvements. Always include resolution time metrics and customer satisfaction when available."
+  }
+}
