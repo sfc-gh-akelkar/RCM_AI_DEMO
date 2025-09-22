@@ -86,6 +86,12 @@ INSERT INTO support_teams_dim VALUES
 -- ========================================================================
 
 -- Generate sample support tickets across different product areas, clients, and time periods
+INSERT INTO support_tickets_fact (
+    ticket_id, client_key, user_key, product_area, feature_name, severity_level, 
+    category, subcategory, created_date, resolved_date, resolution_time_hours, 
+    status, customer_satisfaction_score, assigned_team, escalated_flag, 
+    client_impact, resolution_method, first_response_time_hours
+)
 WITH ticket_generator AS (
     SELECT 
         ROW_NUMBER() OVER (ORDER BY SEQ4()) as ticket_num,
@@ -107,12 +113,6 @@ WITH ticket_generator AS (
         RANDOM() as resolved_rand,
         RANDOM() as escalated_rand
     FROM TABLE(GENERATOR(ROWCOUNT => 750))
-)
-INSERT INTO support_tickets_fact (
-    ticket_id, client_key, user_key, product_area, feature_name, severity_level, 
-    category, subcategory, created_date, resolved_date, resolution_time_hours, 
-    status, customer_satisfaction_score, assigned_team, escalated_flag, 
-    client_impact, resolution_method, first_response_time_hours
 )
 SELECT 
     'TKT' || LPAD(ticket_num::VARCHAR, 6, '0') as ticket_id,
