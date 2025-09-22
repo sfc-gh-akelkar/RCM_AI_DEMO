@@ -92,10 +92,10 @@
    *"How many customers are growing YOY and how many are shrinking? Show me the revenue trends by client."*
 
 2. **Churn Risk Assessment**  
-   *"Who are my customers that are at risk of churn? Provide a reason why each is at risk based on performance trends, support tickets, and engagement data."*
+   *"Who are my customers that are at risk of churn? Provide a reason why each is at risk based on performance trends and engagement data."*
 
-3. **Client Satisfaction & Support Analysis**  
-   *"Which product areas generate the most customer support tickets? How does support volume correlate with client satisfaction scores?"*
+3. **Client Satisfaction Analysis**  
+   *"Which clients show declining performance trends? How can we identify satisfaction issues early through operational metrics?"*
 
 4. **Client Lifecycle Value Analysis**  
    *"What is the lifetime value progression of our clients? Which clients have the highest growth potential?"*
@@ -240,7 +240,7 @@
 5. **Client Health & Retention Analytics** (6 mins)
    - YOY growth vs. shrinking clients
    - Churn risk assessment with reasons
-   - Support ticket analysis by product area
+   - Client satisfaction and performance correlation
 
 6. **Operational Excellence** (5 mins)
    - Display team productivity and cost-to-collect metrics
