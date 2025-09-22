@@ -21,20 +21,10 @@ tables (
     
     CLIENTS as CUSTOMER_DIM primary key (CUSTOMER_KEY) 
         with synonyms=('clients','customers','organizations') 
-        comment='Client information with type segmentation',
-    
-    CATEGORIES as SUPPORT_CATEGORIES_DIM primary key (CATEGORY_KEY) 
-        with synonyms=('ticket categories','support categories') 
-        comment='Support ticket categories and types',
-    
-    TEAMS as SUPPORT_TEAMS_DIM primary key (TEAM_KEY) 
-        with synonyms=('support teams','help desk teams') 
-        comment='Support team information and specializations'
+        comment='Client information with type segmentation'
 )
 relationships (
-    TICKETS_TO_CLIENTS as TICKETS(CLIENT_KEY) references CLIENTS(CUSTOMER_KEY),
-    TICKETS_TO_CATEGORIES as TICKETS(CATEGORY) references CATEGORIES(CATEGORY_NAME),
-    TICKETS_TO_TEAMS as TICKETS(ASSIGNED_TEAM) references TEAMS(TEAM_NAME)
+    TICKETS_TO_CLIENTS as TICKETS(CLIENT_KEY) references CLIENTS(CUSTOMER_KEY)
 )
 facts (
     TICKETS.RESOLUTION_TIME as resolution_time_hours comment='Time to resolve ticket in hours',
@@ -68,9 +58,7 @@ dimensions (
     CLIENTS.CUSTOMER_NAME as client_name with synonyms=('client','customer','organization') comment='Name of the client organization',
     
     -- Support Team Information
-    TICKETS.ASSIGNED_TEAM as support_team with synonyms=('team','assigned team','handling team') comment='Support team that handled the ticket',
-    TEAMS.SPECIALIZATION as team_specialization comment='Team specialization area',
-    TEAMS.SHIFT_COVERAGE as team_coverage comment='Team shift coverage (24x7, Business Hours, Extended Hours)'
+    TICKETS.ASSIGNED_TEAM as support_team with synonyms=('team','assigned team','handling team') comment='Support team that handled the ticket'
 )
 metrics (
     -- Volume Metrics
@@ -94,7 +82,7 @@ metrics (
     TICKETS.CRITICAL_TICKETS as COUNT(CASE WHEN tickets.severity_level = 'Critical' THEN 1 END) comment='Number of critical tickets'
 )
 comment='Comprehensive view for analyzing customer support ticket patterns, resolution performance, and product area issues'
-with extension (CA='{"tables":[{"name":"TICKETS","dimensions":[{"name":"PRODUCT_AREA","sample_values":["Claims Processing","Denial Management","Reporting & Analytics","Patient Collections","User Management","System Integration","Mobile App","API Services"]},{"name":"FEATURE_NAME","sample_values":["Batch Claims Upload","Appeal Generation","Custom Reports","Performance Dashboard","Payment Plans","User Roles"]},{"name":"CATEGORY","sample_values":["Bug","Feature Request","How-to","Training","Configuration"]},{"name":"SEVERITY_LEVEL","sample_values":["Critical","High","Medium","Low"]},{"name":"STATUS","sample_values":["Open","In Progress","Resolved","Closed"]},{"name":"CLIENT_IMPACT","sample_values":["Low","Medium","High"]},{"name":"TICKET_DATE","sample_values":["2024-01-15","2024-02-20","2024-03-10"]}],"facts":[{"name":"RESOLUTION_TIME"},{"name":"FIRST_RESPONSE_TIME"},{"name":"CUSTOMER_SATISFACTION"}],"metrics":[{"name":"TOTAL_TICKETS"},{"name":"AVERAGE_RESOLUTION_TIME"},{"name":"AVERAGE_SATISFACTION"},{"name":"ESCALATION_RATE"}]},{"name":"CLIENTS","dimensions":[{"name":"CLIENT_TYPE","sample_values":["Retail","Tech","Manufacturing"]},{"name":"CLIENT_NAME","sample_values":["Bailey and Sons","Oliver Ltd","Santos-Edwards"]}]},{"name":"TEAMS","dimensions":[{"name":"TEAM_NAME","sample_values":["Level 1 Support","Level 2 Technical","Level 3 Engineering","Customer Success"]},{"name":"SPECIALIZATION","sample_values":["General support and triage","Technical issues and bugs","Complex technical issues","Training and best practices"]},{"name":"SHIFT_COVERAGE","sample_values":["Business Hours","Extended Hours","24x7"]}]}],"relationships":[{"name":"TICKETS_TO_CLIENTS","relationship_type":"many_to_one"},{"name":"TICKETS_TO_CATEGORIES","relationship_type":"many_to_one"},{"name":"TICKETS_TO_TEAMS","relationship_type":"many_to_one"}],"verified_queries":[{"name":"Product areas with most tickets","question":"Which product areas generate the most customer support tickets?","sql":"SELECT\\n  t.product_area,\\n  COUNT(*) AS total_tickets,\\n  AVG(t.resolution_time_hours) AS avg_resolution_time\\nFROM\\n  tickets AS t\\nWHERE\\n  t.created_date >= ''2024-01-01''\\nGROUP BY\\n  t.product_area\\nORDER BY\\n  total_tickets DESC","use_as_onboarding_question":true,"verified_by":"System","verified_at":1704067200},{"name":"Support tickets by client type","question":"How do support ticket volumes vary by client type?","sql":"SELECT\\n  c.vertical as client_type,\\n  COUNT(*) AS ticket_count,\\n  AVG(t.customer_satisfaction_score) AS avg_satisfaction\\nFROM\\n  tickets AS t\\n  JOIN clients AS c ON t.client_key = c.customer_key\\nGROUP BY\\n  c.vertical\\nORDER BY\\n  ticket_count DESC","use_as_onboarding_question":false,"verified_by":"System","verified_at":1704067200}]}');
+with extension (CA='{"tables":[{"name":"TICKETS","dimensions":[{"name":"PRODUCT_AREA","sample_values":["Claims Processing","Denial Management","Reporting & Analytics","Patient Collections","User Management","System Integration","Mobile App","API Services"]},{"name":"FEATURE_NAME","sample_values":["Batch Claims Upload","Appeal Generation","Custom Reports","Performance Dashboard","Payment Plans","User Roles"]},{"name":"CATEGORY","sample_values":["Bug","Feature Request","How-to","Training","Configuration"]},{"name":"SEVERITY_LEVEL","sample_values":["Critical","High","Medium","Low"]},{"name":"STATUS","sample_values":["Open","In Progress","Resolved","Closed"]},{"name":"CLIENT_IMPACT","sample_values":["Low","Medium","High"]},{"name":"TICKET_DATE","sample_values":["2024-01-15","2024-02-20","2024-03-10"]}],"facts":[{"name":"RESOLUTION_TIME"},{"name":"FIRST_RESPONSE_TIME"},{"name":"CUSTOMER_SATISFACTION"}],"metrics":[{"name":"TOTAL_TICKETS"},{"name":"AVERAGE_RESOLUTION_TIME"},{"name":"AVERAGE_SATISFACTION"},{"name":"ESCALATION_RATE"}]},{"name":"CLIENTS","dimensions":[{"name":"CLIENT_TYPE","sample_values":["Retail","Tech","Manufacturing"]},{"name":"CLIENT_NAME","sample_values":["Bailey and Sons","Oliver Ltd","Santos-Edwards"]}]}],"relationships":[{"name":"TICKETS_TO_CLIENTS","relationship_type":"many_to_one"}],"verified_queries":[{"name":"Product areas with most tickets","question":"Which product areas generate the most customer support tickets?","sql":"SELECT\\n  t.product_area,\\n  COUNT(*) AS total_tickets,\\n  AVG(t.resolution_time_hours) AS avg_resolution_time\\nFROM\\n  tickets AS t\\nWHERE\\n  t.created_date >= ''2024-01-01''\\nGROUP BY\\n  t.product_area\\nORDER BY\\n  total_tickets DESC","use_as_onboarding_question":true,"verified_by":"System","verified_at":1704067200},{"name":"Support tickets by client type","question":"How do support ticket volumes vary by client type?","sql":"SELECT\\n  c.vertical as client_type,\\n  COUNT(*) AS ticket_count,\\n  AVG(t.customer_satisfaction_score) AS avg_satisfaction\\nFROM\\n  tickets AS t\\n  JOIN clients AS c ON t.client_key = c.customer_key\\nGROUP BY\\n  c.vertical\\nORDER BY\\n  ticket_count DESC","use_as_onboarding_question":false,"verified_by":"System","verified_at":1704067200}]}');
 
 -- ========================================================================
 -- VERIFICATION
