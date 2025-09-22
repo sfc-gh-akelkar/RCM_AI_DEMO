@@ -59,8 +59,8 @@ dimensions (
     
     -- Timing
     TICKETS.CREATED_DATE as ticket_date with synonyms=('date','created date','submission date') comment='Date ticket was created',
-    TICKETS.TICKET_MONTH as MONTH(ticket_date) comment='Month the ticket was created',
-    TICKETS.TICKET_YEAR as YEAR(ticket_date) comment='Year the ticket was created',
+    TICKETS.TICKET_MONTH as MONTH(TICKETS.CREATED_DATE) comment='Month the ticket was created',
+    TICKETS.TICKET_YEAR as YEAR(TICKETS.CREATED_DATE) comment='Year the ticket was created',
     TICKETS.RESOLVED_DATE as resolved_date with synonyms=('resolution date','closed date') comment='Date ticket was resolved',
     
     -- Client Information
