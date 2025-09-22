@@ -215,39 +215,36 @@ ALTER TABLE support_tickets_fact ADD SEARCH OPTIMIZATION;
 -- ========================================================================
 
 -- Verify data was loaded correctly
-SELECT 'Support Tickets by Product Area' as metric_name, '' as value
-UNION ALL
-SELECT product_area, COUNT(*)::VARCHAR 
+SELECT 'Support Tickets by Product Area' as report_section;
+
+SELECT product_area as area, COUNT(*) as ticket_count
 FROM support_tickets_fact 
 GROUP BY product_area 
 ORDER BY COUNT(*) DESC;
 
-SELECT '' as separator, ''
-UNION ALL
-SELECT 'Support Tickets by Status' as metric_name, '' as value
-UNION ALL
-SELECT status, COUNT(*)::VARCHAR 
-FROM support_tickets_fact 
-GROUP BY status;
+SELECT 'Support Tickets by Status' as report_section;
 
-SELECT '' as separator, ''
-UNION ALL
-SELECT 'Average Resolution Time by Product Area' as metric_name, '' as value
-UNION ALL
-SELECT product_area, ROUND(AVG(resolution_time_hours), 1)::VARCHAR || ' hours'
+SELECT status, COUNT(*) as ticket_count
+FROM support_tickets_fact 
+GROUP BY status
+ORDER BY COUNT(*) DESC;
+
+SELECT 'Average Resolution Time by Product Area' as report_section;
+
+SELECT product_area, ROUND(AVG(resolution_time_hours), 1) as avg_hours
 FROM support_tickets_fact 
 WHERE resolution_time_hours IS NOT NULL
 GROUP BY product_area 
 ORDER BY AVG(resolution_time_hours) DESC;
 
 -- Show total counts
-SELECT 'SUPPORT TICKET TABLES' as category, '' as table_name, NULL as row_count
+SELECT 'Table Row Counts' as report_section;
+
+SELECT 'support_tickets_fact' as table_name, COUNT(*) as row_count FROM support_tickets_fact
 UNION ALL
-SELECT '', 'support_tickets_fact', COUNT(*) FROM support_tickets_fact
+SELECT 'support_categories_dim' as table_name, COUNT(*) as row_count FROM support_categories_dim
 UNION ALL
-SELECT '', 'support_categories_dim', COUNT(*) FROM support_categories_dim
-UNION ALL
-SELECT '', 'support_teams_dim', COUNT(*) FROM support_teams_dim;
+SELECT 'support_teams_dim' as table_name, COUNT(*) as row_count FROM support_teams_dim;
 
 -- ========================================================================
 -- COMPLETION MESSAGE
