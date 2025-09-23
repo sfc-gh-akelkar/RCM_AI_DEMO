@@ -69,11 +69,6 @@ CREATE OR REPLACE FILE FORMAT CSV_FORMAT
     TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS'
     NULL_IF = ('NULL', 'null', '', 'N/A', 'n/a');
 
--- Create Git repository integration for the public demo repository
-CREATE OR REPLACE GIT REPOSITORY RCM_DEMO_REPO
-    API_INTEGRATION = git_api_integration
-    ORIGIN = 'https://github.com/NickAkincilar/Snowflake_AI_DEMO.git';
-
 -- Create internal stage for demo data and documents
 CREATE OR REPLACE STAGE RCM_DATA_STAGE
     FILE_FORMAT = CSV_FORMAT
@@ -81,10 +76,8 @@ CREATE OR REPLACE STAGE RCM_DATA_STAGE
     DIRECTORY = ( ENABLE = TRUE)
     ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
 
-ALTER GIT REPOSITORY RCM_DEMO_REPO FETCH;
-
--- Note: We don't copy demo_data (deleted) but keep git integration for potential future use
--- Documents are embedded in script 02_rcm_documents_setup.sql instead of copied from git
+-- Note: No git repository or data pulling used for this demo
+-- All data is generated synthetically and documents are embedded in the setup scripts
 
 -- ========================================================================
 -- DIMENSION TABLES - Healthcare Specific
