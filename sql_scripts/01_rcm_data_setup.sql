@@ -36,13 +36,8 @@ GRANT USAGE ON WAREHOUSE RCM_INTELLIGENCE_WH TO ROLE SF_INTELLIGENCE_DEMO;
 ALTER USER IDENTIFIER($current_user_name) SET DEFAULT_ROLE = SF_INTELLIGENCE_DEMO;
 ALTER USER IDENTIFIER($current_user_name) SET DEFAULT_WAREHOUSE = RCM_INTELLIGENCE_WH;
 
--- Create API Integration for GitHub (restore original integration)
-CREATE OR REPLACE API INTEGRATION git_api_integration
-    API_PROVIDER = git_https_api
-    API_ALLOWED_PREFIXES = ('https://github.com/NickAkincilar/')
-    ENABLED = TRUE;
-
-GRANT USAGE ON INTEGRATION GIT_API_INTEGRATION TO ROLE SF_INTELLIGENCE_DEMO;
+-- Note: No git integrations, repositories, or external dependencies created
+-- Demo is completely self-contained
 
 -- Switch to SF_INTELLIGENCE_DEMO role to create demo objects
 USE ROLE SF_INTELLIGENCE_DEMO;
