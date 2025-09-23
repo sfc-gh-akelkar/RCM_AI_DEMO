@@ -57,98 +57,113 @@
 
 ## 💰 **Act 2: Claims Intelligence & Denial Management (4 minutes)**
 
-### **Scene 2.1: Denial Pattern Recognition**
-*"Let's dive into the heart of revenue cycle - claims and denials."*
+### **Scene 2.1: Automated Denial Pattern Analysis** 🤖
+*"Let's dive into the heart of revenue cycle - claims and denials with AI-powered insights."*
 
 **Demo Question:**
 ```
-"Show me denial patterns by payer and reason code. Which denial types are trending upward and costing us the most revenue?"
+"Show me denial patterns by payer and reason code. Which denial types are trending upward and costing us the most revenue? Predict which pending claims are likely to be denied."
 ```
 
 **What to Highlight:**
-- ✅ **Automated Denial Analysis**: Pattern recognition across millions of claims
-- ✅ **Revenue Impact Quantification**: Financial impact of each denial category
-- ✅ **Trend Detection**: Early identification of emerging denial patterns
+- ✅ **Automated Denial Analysis**: AI pattern recognition across millions of claims
+- ✅ **Predictive Denial Detection**: Machine learning identifies claims at risk before submission
+- ✅ **Real-time Anomaly Detection**: Unusual billing patterns and coding errors flagged instantly
+- ✅ **Revenue Impact Quantification**: Financial impact of each denial category with trend analysis
 
 **RCM Use Case Connection:**
-- **Claims Processing Optimization**: Intelligent routing based on payer requirements
-- **Revenue Optimization**: Immediate identification of revenue leakage sources
+- **Automated denial pattern analysis** to identify root causes and predict denials
+- **Real-time anomaly detection** for unusual billing patterns or coding errors
+- **Intelligent routing of claims** based on payer requirements and historical success rates
 
-### **Scene 2.2: Payer Performance Intelligence**
-*"Now let's analyze payer behavior to optimize our approach."*
+### **Scene 2.2: Payer Contract Performance & Revenue Optimization** 💸
+*"Now let's optimize revenue through intelligent payer analysis and contract performance."*
 
 **Demo Question:**
 ```
-"Which payers have the longest payment cycles and highest underpayment rates? Show me our appeal success rates by payer and denial reason."
+"Which payers have the longest payment cycles and highest underpayment rates? Show me our appeal success rates by payer and identify contract optimization opportunities."
 ```
 
 **What to Highlight:**
-- ✅ **Payer Behavior Analytics**: Payment timing and patterns
-- ✅ **Appeal Strategy Optimization**: Success rates by approach
-- ✅ **Contract Performance**: Underpayment identification
+- ✅ **Payer Contract Analysis**: Underpayment detection and optimization opportunities
+- ✅ **Payment Pattern Intelligence**: Historical payment timing and behavior analysis
+- ✅ **Appeal Strategy Optimization**: Success rates by payer, denial reason, and approach
+- ✅ **Charge Capture Optimization**: Pattern recognition of missed charges and billing opportunities
 
 **RCM Use Case Connection:**
-- **Revenue Optimization**: Payer contract performance analysis
-- **Operational Efficiency**: Intelligent work queue prioritization
+- **Payer contract performance analysis** to identify underpayments and optimization opportunities
+- **Cash flow forecasting** using historical payment patterns and current A/R aging
+- **Charge capture optimization** through pattern recognition of missed charges
 
 ---
 
-## 🔮 **Act 3: Predictive Operations & Patient Experience (4 minutes)**
+## 🔮 **Act 3: Operational Excellence & Patient Intelligence (4 minutes)**
 
-### **Scene 3.1: Cash Flow & Workforce Prediction**
-*"Let's look ahead to optimize operations and cash flow."*
-
-**Demo Question:**
-```
-"Predict our cash flow for the next 90 days based on current A/R aging and historical payment patterns. What staffing adjustments should we make?"
-```
-
-**What to Highlight:**
-- ✅ **Cash Flow Forecasting**: Predictive analytics for financial planning
-- ✅ **Workforce Optimization**: Staffing predictions based on claim complexity
-- ✅ **Resource Allocation**: Data-driven operational decisions
-
-**RCM Use Case Connection:**
-- **Cash Flow Forecasting**: Using A/R aging and payment patterns
-- **Workforce Optimization**: Predicting staffing needs by claim volumes
-
-### **Scene 3.2: Patient Financial Experience**
-*"Now let's optimize the patient experience while maximizing collections."*
+### **Scene 3.1: Workforce Optimization & Operational Intelligence** ⚙️
+*"Let's optimize operations with predictive analytics and intelligent automation."*
 
 **Demo Question:**
 ```
-"Analyze patient payment propensity by demographics and insurance type. Which patients should receive payment plans vs. financial assistance screening?"
+"Predict our cash flow for the next 90 days based on current A/R aging and historical payment patterns. What staffing adjustments should we make based on claim volumes and complexity?"
 ```
 
 **What to Highlight:**
-- ✅ **Payment Propensity Modeling**: Predictive patient payment behavior
-- ✅ **Financial Assistance Optimization**: Automated eligibility screening
-- ✅ **Personalized Strategies**: Customized patient communication approaches
+- ✅ **Cash Flow Forecasting**: Advanced predictive analytics using A/R aging and payment patterns
+- ✅ **Workforce Optimization**: AI-driven staffing predictions based on claim volumes and complexity
+- ✅ **Intelligent Work Queue Prioritization**: Revenue impact and aging-based task routing
+- ✅ **Prior Authorization Prediction**: Automated identification of prior auth requirements
 
 **RCM Use Case Connection:**
-- **Patient Financial Experience**: Propensity analysis and payment plan optimization
-- **Revenue Optimization**: Maximizing collectible revenue through personalized approaches
+- **Cash flow forecasting** using historical payment patterns and current A/R aging
+- **Workforce optimization** by predicting staffing needs based on claim volumes and complexity
+- **Automated prior authorization requirements** prediction
+- **Intelligent work queue prioritization** based on revenue impact and aging
+
+### **Scene 3.2: Patient Financial Experience & Revenue Optimization** 🏥
+*"Now let's maximize patient satisfaction and revenue through personalized financial strategies."*
+
+**Demo Question:**
+```
+"Analyze patient payment propensity by demographics and insurance type. Which patients should receive payment plans vs. financial assistance screening? Show me personalized communication strategies."
+```
+
+**What to Highlight:**
+- ✅ **Payment Propensity Analytics**: Predictive modeling for patient payment behavior
+- ✅ **Automated Financial Assistance Screening**: AI-driven eligibility determination
+- ✅ **Personalized Communication Strategies**: Data-driven patient engagement based on payment patterns
+- ✅ **Revenue Optimization**: Maximizing collectible revenue through targeted approaches
+
+**RCM Use Case Connection:**
+- **Predictive analytics for patient payment propensity** and optimal payment plan recommendations
+- **Automated financial assistance eligibility** screening
+- **Personalized patient communication strategies** based on payment behavior patterns
 
 ---
 
-## 🛡️ **Act 4: Compliance & Risk Intelligence (1.5 minutes)**
+## 🛡️ **Act 4: Compliance, Risk & Data Integration Intelligence (1.5 minutes)**
 
-### **Scene 4.1: Real-Time Compliance Monitoring**
-*"Finally, let's ensure we're always compliant and identifying risks early."*
+### **Scene 4.1: Comprehensive Compliance & Data Integration**
+*"Finally, let's ensure compliance while showcasing our unified data intelligence across all systems."*
 
 **Demo Question:**
 ```
-"Show me any billing anomalies or compliance risks from the past 30 days. Are there any unusual coding patterns that could trigger an audit?"
+"Show me our real-time compliance dashboard with billing anomalies, audit risks, and KPI monitoring. How do our metrics benchmark against industry standards?"
 ```
 
 **What to Highlight:**
-- ✅ **Anomaly Detection**: Real-time identification of unusual patterns
-- ✅ **Compliance Monitoring**: Automated audit trail generation
-- ✅ **Risk Scoring**: Proactive risk identification and mitigation
+- ✅ **Real-time Compliance Monitoring**: Automated audit trail generation and violation detection
+- ✅ **Risk Scoring Analytics**: AI-powered scoring for compliance violations and billing irregularities
+- ✅ **Unified Data Integration**: Single view across multiple EHR, billing, and payer systems
+- ✅ **Industry Benchmarking**: Performance comparison against peer organizations and standards
+- ✅ **Automated KPI Alerting**: Real-time monitoring with intelligent notifications
 
 **RCM Use Case Connection:**
-- **Compliance & Risk Management**: Automated monitoring and risk scoring
-- **Real-time Processing**: Immediate alerts for potential violations
+- **Automated audit trail generation** and compliance monitoring
+- **Risk scoring for potential compliance violations** or billing irregularities
+- **Real-time monitoring of key performance indicators** with automated alerting
+- **Unified view across multiple EHR, billing, and payer systems**
+- **Real-time dashboards for C-suite visibility** into revenue cycle performance
+- **Benchmarking against industry standards** and peer organizations
 
 ---
 
@@ -157,15 +172,16 @@
 ### **Demo Summary:**
 *"In just 15 minutes, we've seen how Snowflake Intelligence transforms revenue cycle management:"*
 
-**Value Delivered:**
+**Value Delivered - Complete RCM Intelligence Suite:**
 1. **📈 Portfolio Intelligence**: Growth tracking and churn prediction for account management
-2. **💰 Revenue Optimization**: Denial analysis and payer performance insights  
-3. **🔮 Predictive Operations**: Cash flow forecasting and workforce optimization
-4. **🏥 Patient Experience**: Payment propensity and financial assistance optimization
-5. **🛡️ Risk Management**: Real-time compliance monitoring and anomaly detection
+2. **🤖 Claims Processing Excellence**: Automated denial prediction, anomaly detection, and intelligent routing
+3. **💰 Revenue Optimization**: Payer contract analysis, charge capture optimization, and cash flow forecasting
+4. **⚙️ Operational Excellence**: Workforce optimization, prior auth prediction, and intelligent work prioritization
+5. **🏥 Patient Financial Experience**: Payment propensity modeling, financial assistance automation, and personalized strategies
+6. **🛡️ Compliance & Integration**: Real-time monitoring, risk scoring, unified data views, and industry benchmarking
 
 ### **Competitive Advantage:**
-*"This isn't just reporting - it's intelligent automation that helps RCM companies like Quadax increase revenue, reduce costs, and improve patient satisfaction while staying compliant."*
+*"This is the future of revenue cycle management - AI-powered intelligence that automatically optimizes every aspect of your RCM operations. From predicting denials before they happen to personalizing patient payment strategies, Snowflake Intelligence transforms RCM companies like Quadax from reactive to predictive, delivering measurable improvements in revenue, efficiency, and compliance."*
 
 ---
 
