@@ -55,7 +55,7 @@ facts (
     CLAIMS.PAID_AMOUNT as paid_amount comment='Amount actually paid by payer',
     CLAIMS.PATIENT_RESPONSIBILITY as patient_responsibility comment='Patient copay, deductible, and coinsurance',
     CLAIMS.DAYS_TO_PAYMENT as days_to_payment comment='Days from submission to payment',
-    CLAIMS.CLAIM_RECORD as 1 comment='Count of claims for volume metrics'
+    1 as claim_record comment='Count of claims for volume metrics'
 )
 dimensions (
     -- Claim attributes
@@ -68,9 +68,9 @@ dimensions (
     CLAIMS.APPEAL_FLAG as appealed with synonyms=('appeal','appealed claim') comment='Whether claim was appealed',
     
     -- Time dimensions
-    CLAIMS.SUBMISSION_MONTH as MONTH(CLAIMS.SUBMISSION_DATE) comment='Month claim was submitted',
-    CLAIMS.SUBMISSION_YEAR as YEAR(CLAIMS.SUBMISSION_DATE) comment='Year claim was submitted',
-    CLAIMS.SUBMISSION_QUARTER as QUARTER(CLAIMS.SUBMISSION_DATE) comment='Quarter claim was submitted',
+    MONTH(CLAIMS.SUBMISSION_DATE) as submission_month comment='Month claim was submitted',
+    YEAR(CLAIMS.SUBMISSION_DATE) as submission_year comment='Year claim was submitted',
+    QUARTER(CLAIMS.SUBMISSION_DATE) as submission_quarter comment='Quarter claim was submitted',
     
     -- Provider information
     PROVIDERS.PROVIDER_NAME as provider_name with synonyms=('provider','hospital','clinic','practice') comment='Name of healthcare provider',
@@ -178,7 +178,7 @@ facts (
     DENIALS.RECOVERED_AMOUNT as recovered_amount comment='Amount recovered through appeals',
     DENIALS.DAYS_TO_APPEAL as days_to_appeal comment='Days from denial to appeal submission',
     DENIALS.DAYS_TO_RESOLUTION as days_to_resolution comment='Days from denial to final resolution',
-    DENIALS.DENIAL_RECORD as 1 comment='Count of denials for volume metrics'
+    1 as denial_record comment='Count of denials for volume metrics'
 )
 dimensions (
     -- Denial timing
@@ -187,9 +187,9 @@ dimensions (
     DENIALS.RESOLUTION_DATE as resolution_date with synonyms=('resolution date','final date') comment='Date denial was finally resolved',
     
     -- Time dimensions
-    DENIALS.DENIAL_MONTH as MONTH(DENIALS.DENIAL_DATE) comment='Month claim was denied',
-    DENIALS.DENIAL_YEAR as YEAR(DENIALS.DENIAL_DATE) comment='Year claim was denied',
-    DENIALS.DENIAL_QUARTER as QUARTER(DENIALS.DENIAL_DATE) comment='Quarter claim was denied',
+    MONTH(DENIALS.DENIAL_DATE) as denial_month comment='Month claim was denied',
+    YEAR(DENIALS.DENIAL_DATE) as denial_year comment='Year claim was denied',
+    QUARTER(DENIALS.DENIAL_DATE) as denial_quarter comment='Quarter claim was denied',
     
     -- Status and outcomes
     DENIALS.DENIAL_STATUS as denial_status with synonyms=('status','denial state') comment='Current status of denial (Open, Under Review, Resolved)',
