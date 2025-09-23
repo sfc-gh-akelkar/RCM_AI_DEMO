@@ -18,7 +18,7 @@ This demo enables natural language analysis of:
 
 ## Setup Instructions
 
-**Modular Setup**: The RCM demo environment is created with 5 sequential scripts:
+**Modular Setup**: The RCM demo environment is created with 6 sequential scripts:
 
 1. **Run the setup scripts in order**:
    ```sql
@@ -27,25 +27,29 @@ This demo enables natural language analysis of:
    -- Part 1: Data Model and Infrastructure
    /sql_scripts/01_rcm_data_setup.sql
    
-   -- Part 1.5: Generate Synthetic Healthcare Data  
-   /sql_scripts/02_rcm_data_generation.sql
+   -- Part 2: Create Healthcare Documents
+   /sql_scripts/02_rcm_documents_setup.sql
    
-   -- Part 2: Healthcare Semantic Views
-   /sql_scripts/03_rcm_semantic_views.sql
+   -- Part 3: Generate Synthetic Healthcare Data  
+   /sql_scripts/03_rcm_data_generation.sql
    
-   -- Part 3: Document Intelligence Search Services
-   /sql_scripts/04_rcm_cortex_search.sql
+   -- Part 4: Healthcare Semantic Views
+   /sql_scripts/04_rcm_semantic_views.sql
    
-   -- Part 4: RCM AI Agent Configuration
-   /sql_scripts/05_rcm_agent_setup.sql
+   -- Part 5: Document Intelligence Search Services
+   /sql_scripts/05_rcm_cortex_search.sql
+   
+   -- Part 6: RCM AI Agent Configuration
+   /sql_scripts/06_rcm_agent_setup.sql
    ```
 
 2. **What the scripts create**:
    - `SF_INTELLIGENCE_DEMO` role and `RCM_INTELLIGENCE_WH` warehouse
    - `RCM_AI_DEMO.RCM_SCHEMA` database and schema
-   - Git repository integration for automated data loading
+   - **Self-contained demo** with no external dependencies
    - **10 healthcare dimension tables** (providers, payers, procedures, diagnoses, etc.)
    - **4 fact tables** (claims, denials, payments, encounters) with 50,000+ records
+   - **8+ healthcare policy documents** embedded in the database
    - **2 RCM-specific semantic views** for Cortex Analyst
    - **5 healthcare document search services** for Cortex Search
    - **Healthcare market intelligence functions** with external access
@@ -138,10 +142,10 @@ Specialized Healthcare AI Agent (`RCM_Healthcare_Agent`) with advanced RCM capab
 - **Market Intelligence**: Incorporates real-time healthcare industry data
 - **Automated RCM Workflows**: Intelligent revenue cycle task orchestration and alerts
 
-### 5. GitHub Integration
-- **Repository**: `https://github.com/NickAkincilar/Snowflake_AI_DEMO.git`
-- **Automated Sync**: Pulls healthcare demo data and RCM documents
-- **File Processing**: Parses healthcare documents using Cortex Parse for search indexing
+### 5. Self-Contained Design
+- **No External Dependencies**: All data and documents created locally
+- **Embedded Documents**: Healthcare policies and procedures stored in database
+- **Synthetic Data Generation**: Realistic healthcare data created via SQL scripts
 
 ## RCM Architecture Diagram
 

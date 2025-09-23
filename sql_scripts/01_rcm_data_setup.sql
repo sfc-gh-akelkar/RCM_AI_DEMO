@@ -36,13 +36,7 @@ GRANT USAGE ON WAREHOUSE RCM_INTELLIGENCE_WH TO ROLE SF_INTELLIGENCE_DEMO;
 ALTER USER IDENTIFIER($current_user_name) SET DEFAULT_ROLE = SF_INTELLIGENCE_DEMO;
 ALTER USER IDENTIFIER($current_user_name) SET DEFAULT_WAREHOUSE = RCM_INTELLIGENCE_WH;
 
--- Create API Integration for GitHub (public repository access)
-CREATE OR REPLACE API INTEGRATION git_api_integration
-    API_PROVIDER = git_https_api
-    API_ALLOWED_PREFIXES = ('https://github.com/NickAkincilar/')
-    ENABLED = TRUE;
-
-GRANT USAGE ON INTEGRATION GIT_API_INTEGRATION TO ROLE SF_INTELLIGENCE_DEMO;
+-- Note: No external git integration needed - all data and documents are created locally
 
 -- Switch to SF_INTELLIGENCE_DEMO role to create demo objects
 USE ROLE SF_INTELLIGENCE_DEMO;
@@ -69,25 +63,12 @@ CREATE OR REPLACE FILE FORMAT CSV_FORMAT
     TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS'
     NULL_IF = ('NULL', 'null', '', 'N/A', 'n/a');
 
--- Create Git repository integration for the public demo repository
-CREATE OR REPLACE GIT REPOSITORY RCM_DEMO_REPO
-    API_INTEGRATION = git_api_integration
-    ORIGIN = 'https://github.com/NickAkincilar/Snowflake_AI_DEMO.git';
-
--- Create internal stage for copied data files
+-- Create internal stage for demo data and documents
 CREATE OR REPLACE STAGE RCM_DATA_STAGE
     FILE_FORMAT = CSV_FORMAT
-    COMMENT = 'Internal stage for RCM demo data files'
+    COMMENT = 'Internal stage for RCM demo data and documents'
     DIRECTORY = ( ENABLE = TRUE)
     ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
-
-ALTER GIT REPOSITORY RCM_DEMO_REPO FETCH;
-
--- Copy unstructured documents from Git repository to internal stage
--- (Healthcare data is generated synthetically via script 02_rcm_data_generation.sql)
-COPY FILES 
-    FROM @RCM_DEMO_REPO/branches/main/unstructured_docs/
-    TO @RCM_DATA_STAGE/unstructured_docs/;
 
 -- ========================================================================
 -- DIMENSION TABLES - Healthcare Specific

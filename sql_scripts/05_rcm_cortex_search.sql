@@ -1,5 +1,5 @@
 -- ========================================================================
--- RCM AI Demo - Cortex Search Setup (Part 3 of 4)
+-- RCM AI Demo - Cortex Search Setup (Part 5 of 6)
 -- Healthcare Document Intelligence with Vector Search
 -- ========================================================================
 
@@ -8,22 +8,18 @@ USE DATABASE RCM_AI_DEMO;
 USE SCHEMA RCM_SCHEMA;
 
 -- ========================================================================
--- DOCUMENT PARSING AND PREPARATION
+-- DOCUMENT CONTENT PREPARATION
 -- ========================================================================
 
--- Parse documents from internal stage for healthcare content
-CREATE OR REPLACE TABLE rcm_parsed_content AS 
+-- Use the documents created in script 02 for Cortex Search
+-- Create a view that formats the content for search services
+CREATE OR REPLACE VIEW rcm_parsed_content AS 
 SELECT 
-    relative_path, 
-    BUILD_STAGE_FILE_URL('@RCM_AI_DEMO.RCM_SCHEMA.RCM_DATA_STAGE', relative_path) as file_url,
-    TO_FILE(BUILD_STAGE_FILE_URL('@RCM_AI_DEMO.RCM_SCHEMA.RCM_DATA_STAGE', relative_path)) file_object,
-    SNOWFLAKE.CORTEX.PARSE_DOCUMENT(
-        @RCM_AI_DEMO.RCM_SCHEMA.RCM_DATA_STAGE,
-        relative_path,
-        {'mode':'LAYOUT'}
-    ):content::string as content
-FROM directory(@RCM_AI_DEMO.RCM_SCHEMA.RCM_DATA_STAGE) 
-WHERE relative_path ILIKE 'unstructured_docs/%.pdf';
+    document_path as relative_path,
+    'internal://' || document_path as file_url,
+    document_title as title,
+    content
+FROM rcm_document_content;
 
 -- ========================================================================
 -- HEALTHCARE DOCUMENT SEARCH SERVICES
@@ -51,7 +47,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_finance_docs_search
                 ' KEYWORDS: revenue cycle, claims processing, denial management, payer contracts, reimbursement, financial performance, healthcare billing, medical coding, accounts receivable, cash flow'
             ) as content
         FROM rcm_parsed_content
-        WHERE relative_path ILIKE '%/finance/%'
+        WHERE relative_path LIKE '/finance/%'
     );
 
 -- Search service for RCM operations and HR documents  
@@ -76,7 +72,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_operations_docs_search
                 ' KEYWORDS: healthcare operations, RCM staffing, claims analysts, denial specialists, appeals coordinators, workforce management, productivity metrics, performance standards, training procedures, compliance requirements'
             ) as content
         FROM rcm_parsed_content
-        WHERE relative_path ILIKE '%/hr/%'
+        WHERE relative_path LIKE '/operations/%'
     );
 
 -- Search service for RCM compliance and sales documents
@@ -101,7 +97,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_compliance_docs_search
                 ' KEYWORDS: healthcare compliance, HIPAA, billing regulations, audit requirements, CMS guidelines, payer policies, client success, case studies, implementation, ROI, revenue optimization, cost reduction'
             ) as content
         FROM rcm_parsed_content
-        WHERE relative_path ILIKE '%/sales/%'
+        WHERE relative_path LIKE '/compliance/%'
     );
 
 -- Search service for RCM strategy and marketing documents
@@ -147,20 +143,20 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_knowledge_base_search
             file_url,
             REGEXP_SUBSTR(relative_path, '[^/]+$') as title,
             CASE 
-                WHEN relative_path ILIKE '%/finance/%' THEN 'Financial Policy'
-                WHEN relative_path ILIKE '%/hr/%' THEN 'Operations Manual'
-                WHEN relative_path ILIKE '%/sales/%' THEN 'Client Success Guide'
-                WHEN relative_path ILIKE '%/marketing/%' THEN 'Strategic Plan'
+                WHEN relative_path LIKE '/finance/%' THEN 'Financial Policy'
+                WHEN relative_path LIKE '/operations/%' THEN 'Operations Manual'
+                WHEN relative_path LIKE '/compliance/%' THEN 'Compliance Guide'
+                WHEN relative_path LIKE '/strategy/%' THEN 'Strategic Plan'
                 ELSE 'General Document'
             END as document_type,
             -- Comprehensive healthcare RCM context
             CONCAT(
                 'HEALTHCARE REVENUE CYCLE MANAGEMENT KNOWLEDGE BASE: ',
                 CASE 
-                    WHEN relative_path ILIKE '%/finance/%' THEN 'FINANCIAL POLICY AND PROCEDURES - '
-                    WHEN relative_path ILIKE '%/hr/%' THEN 'OPERATIONS AND HUMAN RESOURCES - '
-                    WHEN relative_path ILIKE '%/sales/%' THEN 'CLIENT SUCCESS AND IMPLEMENTATION - '
-                    WHEN relative_path ILIKE '%/marketing/%' THEN 'STRATEGIC PLANNING AND MARKET ANALYSIS - '
+                    WHEN relative_path LIKE '/finance/%' THEN 'FINANCIAL POLICY AND PROCEDURES - '
+                    WHEN relative_path LIKE '/operations/%' THEN 'OPERATIONS AND WORKFORCE MANAGEMENT - '
+                    WHEN relative_path LIKE '/compliance/%' THEN 'COMPLIANCE AND AUDIT PROCEDURES - '
+                    WHEN relative_path LIKE '/strategy/%' THEN 'STRATEGIC PLANNING AND MARKET ANALYSIS - '
                     ELSE 'GENERAL HEALTHCARE DOCUMENT - '
                 END,
                 REGEXP_SUBSTR(relative_path, '[^/]+$'),
@@ -196,10 +192,10 @@ SELECT * FROM TABLE(
 -- Verify document counts by type
 SELECT 
     CASE 
-        WHEN relative_path ILIKE '%/finance/%' THEN 'Financial Documents'
-        WHEN relative_path ILIKE '%/hr/%' THEN 'Operations Documents'
-        WHEN relative_path ILIKE '%/sales/%' THEN 'Client Success Documents'
-        WHEN relative_path ILIKE '%/marketing/%' THEN 'Strategic Documents'
+        WHEN relative_path LIKE '/finance/%' THEN 'Financial Documents'
+        WHEN relative_path LIKE '/operations/%' THEN 'Operations Documents'
+        WHEN relative_path LIKE '/compliance/%' THEN 'Compliance Documents'
+        WHEN relative_path LIKE '/strategy/%' THEN 'Strategic Documents'
         ELSE 'Other Documents'
     END as document_category,
     COUNT(*) as document_count,
@@ -208,4 +204,4 @@ FROM rcm_parsed_content
 GROUP BY 1
 ORDER BY document_count DESC;
 
-SELECT 'RCM Cortex Search Setup Complete - Part 3 of 4' as status;
+SELECT 'RCM Cortex Search Setup Complete - Part 5 of 6' as status;
