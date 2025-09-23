@@ -1,324 +1,234 @@
-# Snowflake Intelligence Demo
+# Healthcare Revenue Cycle Management AI Demo
 
-This project demonstrates the comprehensive Snowflake Intelligence capabilities including:
-- **Cortex Analyst** (Text-to-SQL via semantic views)
-- **Cortex Search** (Vector search for unstructured documents)  
-- **Snowflake Intelligence Agent** (Multi-tool AI agent with orchestration)
-- **Git Integration** (Automated data loading from GitHub repository)
+This project demonstrates Snowflake Intelligence capabilities specifically designed for **Healthcare Revenue Cycle Management (RCM)** companies, featuring:
 
+- **Healthcare-Specific Data Model** (Claims, denials, payers, providers, procedures)
+- **RCM Semantic Views** (Claims processing and denials management analytics)
+- **Healthcare Document Intelligence** (Cortex Search for RCM policies and procedures)
+- **Specialized RCM AI Agent** (Multi-tool orchestration for healthcare revenue cycle analysis)
+
+## 🏥 RCM Demo Capabilities
+
+This demo enables natural language analysis of:
+- **Client Portfolio Performance** (Healthcare provider growth, churn risk, revenue trends)
+- **Claims Processing Intelligence** (Clean claim rates, denial patterns, payer performance)
+- **Denials Management** (Denial reasons, appeal success rates, recovery optimization)
+- **Operational Efficiency** (Staffing optimization, productivity metrics, cost analysis)
+- **Compliance & Documentation** (Policy search, audit preparation, regulatory compliance)
 
 ## Setup Instructions
 
-**Single Script Setup**: The entire demo environment is created with one script:
+**Modular Setup**: The RCM demo environment is created with 5 sequential scripts:
 
-1. **Run the complete setup script**:
+1. **Run the setup scripts in order**:
    ```sql
-   -- Execute in Snowflake worksheet
-   /sql_scripts/demo_setup.sql
+   -- Execute each script in Snowflake worksheet in sequence:
+   
+   -- Part 1: Data Model and Infrastructure
+   /sql_scripts/01_rcm_data_setup.sql
+   
+   -- Part 1.5: Generate Synthetic Healthcare Data  
+   /sql_scripts/02_rcm_data_generation.sql
+   
+   -- Part 2: Healthcare Semantic Views
+   /sql_scripts/03_rcm_semantic_views.sql
+   
+   -- Part 3: Document Intelligence Search Services
+   /sql_scripts/04_rcm_cortex_search.sql
+   
+   -- Part 4: RCM AI Agent Configuration
+   /sql_scripts/05_rcm_agent_setup.sql
    ```
 
-2. **What the script creates**:
-   - `SF_Intelligence_Demo` role and permissions
-   - `Snow_Intelligence_demo_wh` warehouse
-   - `SF_AI_DEMO.DEMO_SCHEMA` database and schema
-   - Git repository integration
-   - All dimension and fact tables with data
-   - 4 semantic views for Cortex Analyst
-   - 4 Cortex Search services for documents
-   - Web scraping function with external access integration
-   - 1 Snowflake Intelligence Agent with multi-tool capabilities
+2. **What the scripts create**:
+   - `SF_INTELLIGENCE_DEMO` role and `RCM_INTELLIGENCE_WH` warehouse
+   - `RCM_AI_DEMO.RCM_SCHEMA` database and schema
+   - Git repository integration for automated data loading
+   - **10 healthcare dimension tables** (providers, payers, procedures, diagnoses, etc.)
+   - **4 fact tables** (claims, denials, payments, encounters) with 50,000+ records
+   - **2 RCM-specific semantic views** for Cortex Analyst
+   - **5 healthcare document search services** for Cortex Search
+   - **Healthcare market intelligence functions** with external access
+   - **1 specialized RCM AI agent** (`RCM_Healthcare_Agent`)
 
-3. **Post-Setup Verification(Optional)**:
-   - Run `SHOW TABLES;` to verify 20 tables created (17 original + 3 Salesforce CRM)
-   - Run `SHOW SEMANTIC VIEWS;` to verify 4 semantic views
-   - Run `SHOW CORTEX SEARCH SERVICES;` to verify 4 search services
-   - Run `SHOW FUNCTIONS LIKE 'WEB_SCRAPE';` to verify web scraping function
-4. **RUN DEMO**:
-   - Use AI/ML option on the left navigation bar
-   - Pick "Snowflake Intelligence"
-   - Make sure to pick the right agent at the bottom-left 
+3. **Post-Setup Verification**:
+   ```sql
+   -- Verify components
+   SHOW TABLES IN SCHEMA RCM_AI_DEMO.RCM_SCHEMA;
+   SHOW SEMANTIC VIEWS IN SCHEMA RCM_AI_DEMO.RCM_SCHEMA;
+   SHOW CORTEX SEARCH SERVICES IN SCHEMA RCM_AI_DEMO.RCM_SCHEMA;
+   SHOW AGENTS IN SCHEMA snowflake_intelligence.agents;
+   ```
+
+4. **Run RCM Demo**:
+   - Navigate to **AI/ML** → **Snowflake Intelligence**
+   - Select agent: **`RCM_Healthcare_Agent`**
+   - Begin with healthcare revenue cycle questions 
 
 ## Key Components
 
-### 1. Data Infrastructure
-- **Star Schema Design**: 13 dimension tables and 4 fact tables covering Finance, Sales, Marketing, HR
-- **Salesforce CRM Integration**: 3 Salesforce tables (Accounts, Opportunities, Contacts) with 62,000+ CRM records
-- **Automated Data Loading**: Git integration pulls data from GitHub repository
-- **Realistic Sample Data**: 210,000+ records across all business domains with complete customer journey
-- **Database**: `SF_AI_DEMO` with schema `DEMO_SCHEMA`
-- **Warehouse**: `Snow_Intelligence_demo_wh` (XSMALL with auto-suspend/resume)
+### 1. Healthcare Data Infrastructure
+- **RCM Star Schema**: 10 healthcare dimension tables and 4 fact tables for comprehensive revenue cycle analysis
+- **Healthcare Entities**: Providers, payers, procedures (CPT), diagnoses (ICD-10), specialties, patients, denial reasons
+- **Realistic Healthcare Data**: 50,000+ claims, 7,500+ denials, 15 healthcare providers, 10 major payers
+- **Authentic RCM Metrics**: Clean claim rates, denial rates, net collection rates, days to payment, appeal success rates
+- **Database**: `RCM_AI_DEMO` with schema `RCM_SCHEMA`
+- **Warehouse**: `RCM_INTELLIGENCE_WH` (XSMALL with auto-suspend/resume)
 
-### 2. Semantic Views (4 Business Domains)
-- **Finance Semantic View**: Financial transactions, accounts, departments, vendors
-- **Sales Semantic View**: Sales data, customers, products, regions, sales reps
-- **Marketing Semantic View**: Campaign performance, channels, leads, impressions + **Revenue Attribution** (Salesforce CRM integration)
-- **HR Semantic View**: Employee data, departments, jobs, locations, attrition
+### 2. RCM Semantic Views (Cortex Analyst)
+Healthcare-specific semantic views enable natural language queries for revenue cycle analysis:
 
-### 3. Cortex Search Services (4 Domain-Specific)
-- **Finance Documents**: Expense policies, financial reports, vendor contracts
-- **HR Documents**: Employee handbook, performance guidelines, department overviews
-- **Marketing Documents**: Campaign strategies, performance reports, marketing plans
-- **Sales Documents**: Sales playbooks, customer success stories, performance data
+#### **Claims Processing Semantic View**
+- **Tables**: Claims, healthcare providers, payers, procedures, specialties, regions, RCM employees
+- **RCM KPIs**: Clean claim rates, denial rates, net collection rates, days to payment, average charges
+- **Sample Questions**: 
+  - "What is the clean claim rate for each healthcare provider?"
+  - "Which payers have the highest denial rates and longest payment times?"
+  - "Show me revenue trends by provider specialty and region"
 
-### 4. Snowflake Intelligence Agent
-- **Multi-Tool Agent**: Combines Cortex Search, Cortex Analyst, and Web Scraping capabilities
-- **Cross-Domain Analysis**: Can query all business domains and documents
-- **Web Content Analysis**: Can scrape and analyze content from any web URL
-- **Natural Language Interface**: Responds to business questions across all departments
-- **Visualization Support**: Generates charts and visualizations for data insights
+#### **Denials Management Semantic View**  
+- **Tables**: Denials, claims, providers, payers, denial reasons, appeals, RCM staff
+- **RCM KPIs**: Appeal rates, recovery rates, denial categories, appeal success rates, time to resolution
+- **Sample Questions**:
+  - "What are the most common denial reason codes and their financial impact?"
+  - "Which denial categories have the highest appeal success rates?"
+  - "Show me denial trends by payer and provider type"
+
+### 3. Healthcare Document Intelligence (Cortex Search)
+Vector-based semantic search across healthcare RCM documents with specialized search services:
+
+#### **RCM Financial Documents Search**
+- **Content**: Financial policies, vendor contracts, billing procedures, reimbursement guidelines
+- **Use Cases**: Financial policy lookup, contract terms, billing compliance, reimbursement procedures
+- **Sample Questions**: "Find our denial management policies and appeal procedures"
+
+#### **RCM Operations Documents Search**
+- **Content**: Employee handbooks, performance standards, training materials, operational procedures
+- **Use Cases**: Operational policy lookup, performance procedures, training requirements, workflow optimization
+- **Sample Questions**: "What are our performance standards for claims analysts?"
+
+#### **RCM Compliance Documents Search**
+- **Content**: Compliance policies, audit procedures, regulatory requirements, client success documentation
+- **Use Cases**: Compliance lookup, audit preparation, regulatory updates, implementation best practices
+- **Sample Questions**: "Find our HIPAA compliance requirements for claims processing"
+
+#### **RCM Strategy Documents Search**
+- **Content**: Strategic plans, market analysis, competitive intelligence, growth strategies
+- **Use Cases**: Strategic planning, market opportunities, competitive analysis, business development
+- **Sample Questions**: "Show me our strategy for penetrating pediatric specialty markets"
+
+#### **Healthcare Knowledge Base Search**
+- **Content**: Comprehensive search across all RCM documentation
+- **Use Cases**: Cross-functional searches, broad policy lookup, comprehensive analysis
+- **Sample Questions**: "Find all documentation related to payer contract management"
+
+### 4. RCM AI Agent (Multi-Tool Orchestration)
+Specialized Healthcare AI Agent (`RCM_Healthcare_Agent`) with advanced RCM capabilities:
+
+#### **Core Tools:**
+- **2 RCM Cortex Analyst Tools**: Claims processing and denials management analysis
+- **5 Healthcare Search Tools**: Specialized RCM document intelligence
+- **Healthcare Market Intelligence**: External healthcare data scraping
+- **RCM Document Access**: Secure healthcare document download links
+- **RCM Alert System**: Automated notifications for critical RCM issues
+
+#### **Healthcare Intelligence Features:**
+- **Revenue Cycle Analysis**: Combines claims, denials, and financial performance data
+- **Healthcare Document Fusion**: Links RCM policies with operational data
+- **Market Intelligence**: Incorporates real-time healthcare industry data
+- **Automated RCM Workflows**: Intelligent revenue cycle task orchestration and alerts
 
 ### 5. GitHub Integration
 - **Repository**: `https://github.com/NickAkincilar/Snowflake_AI_DEMO.git`
-- **Automated Sync**: Pulls demo data and unstructured documents
-- **File Processing**: Parses PDF documents using Cortex Parse for search indexing
+- **Automated Sync**: Pulls healthcare demo data and RCM documents
+- **File Processing**: Parses healthcare documents using Cortex Parse for search indexing
 
-## Architecture Diagram
+## RCM Architecture Diagram
 
-The following diagram shows how all components work together in the Snowflake Intelligence Demo:
-
-```mermaid
-graph TD
-    subgraph "GitHub Repository: NickAkincilar/Snowflake_AI_DEMO"
-        B[CSV Files<br/>20 demo_data files]
-        C[Unstructured Docs<br/>PDF files]
-    end
-
-    subgraph "Git Integration Layer"
-        A[Git API Integration<br/>SF_AI_DEMO_REPO<br/>Automated file sync]
-    end
-
-    subgraph "Snowflake Database: SF_AI_DEMO.DEMO_SCHEMA"
-        subgraph "Raw Data Layer"
-            D[Internal Data Stage<br/>INTERNAL_DATA_STAGE]
-            E[Parsed Content Table<br/>parsed_content]
-        end
-        
-        subgraph "Dimension Tables (13)"
-            F[product_category_dim<br/>product_dim<br/>vendor_dim<br/>customer_dim<br/>account_dim<br/>department_dim<br/>region_dim<br/>sales_rep_dim<br/>campaign_dim<br/>channel_dim<br/>employee_dim<br/>job_dim<br/>location_dim]
-        end
-        
-        subgraph "Fact Tables (4)"
-            G[sales_fact<br/>finance_transactions<br/>marketing_campaign_fact<br/>hr_employee_fact]
-        end
-        
-        subgraph "Salesforce CRM Tables (3)"
-            SF[sf_accounts<br/>sf_opportunities<br/>sf_contacts<br/>Complete customer journey]
-        end
-    end
-
-    subgraph "Semantic Layer"
-        H[FINANCE_SEMANTIC_VIEW<br/>Financial transactions, accounts, vendors]
-        I[SALES_SEMANTIC_VIEW<br/>Sales data, customers, products, reps]
-        J[MARKETING_SEMANTIC_VIEW<br/>Campaigns, channels, leads, spend<br/>+ Revenue Attribution via CRM]
-        K[HR_SEMANTIC_VIEW<br/>Employees, departments, jobs, locations]
-    end
-
-    subgraph "Cortex Analyst Text2SQL"
-        S[Query Finance Datamart<br/>Text-to-SQL Service]
-        T[Query Sales Datamart<br/>Text-to-SQL Service]
-        U[Query Marketing Datamart<br/>Text-to-SQL Service]
-        V[Query HR Datamart<br/>Text-to-SQL Service]
-    end
-
-    subgraph "Cortex Search Services"
-        L[Search_finance_docs<br/>Finance documents & policies]
-        M[Search_sales_docs<br/>Sales playbooks & stories]
-        N[Search_marketing_docs<br/>Campaign strategies & reports]
-        O[Search_hr_docs<br/>Employee handbook & guidelines]
-    end
-
-    subgraph "Web Scraping Layer"
-        WS[Web Scraping Function<br/>Python-based content extraction<br/>External access integration]
-    end
-
-    subgraph "AI Layer"
-        P[Snowflake Intelligence Agent<br/>COMPANY_CHATBOT_AGENT<br/>Multi-tool orchestration]
-    end
-
-    subgraph "User Interface"
-        Q[Natural Language Queries<br/>Business Questions]
-    end
-
-    %% Data Flow
-    B --> A
-    C --> A
-    A --> D
-    D --> F
-    D --> G
-    D --> SF
-    D --> E
-    
-    %% Semantic Views
-    F --> H
-    G --> H
-    F --> I
-    G --> I
-    F --> J
-    G --> J
-    SF --> J
-    F --> K
-    G --> K
-    
-    %% Cortex Analyst connections
-    H --> S
-    I --> T
-    J --> U
-    K --> V
-    
-    %% Search Services
-    E --> L
-    E --> M
-    E --> N
-    E --> O
-    
-    %% Agent Connections
-    S --> P
-    T --> P
-    U --> P
-    V --> P
-    L --> P
-    M --> P
-    N --> P
-    O --> P
-    WS --> P
-    
-    %% User Access via API
-    P -->|API| Q
-
-    %% Styling
-    classDef dataSource fill:#e1f5fe
-    classDef gitIntegration fill:#e8eaf6
-    classDef database fill:#f3e5f5
-    classDef crm fill:#e8f5e8
-    classDef semantic fill:#e8f5e8
-    classDef analyst fill:#e3f2fd
-    classDef search fill:#fff3e0
-    classDef webscrape fill:#fce4ec
-    classDef agent fill:#ffebee
-    classDef user fill:#f1f8e9
-    
-    class B,C dataSource
-    class A gitIntegration
-    class D,E,F,G database
-    class SF crm
-    class H,I,J,K semantic
-    class S,T,U,V analyst
-    class L,M,N,O search
-    class WS webscrape
-    class P agent
-    class Q user
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 RCM HEALTHCARE AI AGENT                        │
+│                                                                 │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
+│  │   CORTEX        │  │   CORTEX        │  │   HEALTHCARE    │ │
+│  │   ANALYST       │  │   SEARCH        │  │   TOOLS         │ │
+│  │                 │  │                 │  │                 │ │
+│  │ • Claims        │  │ • RCM Finance   │  │ • Market Intel  │ │
+│  │   Processing    │  │ • Operations    │  │ • RCM Alerts    │ │
+│  │ • Denials       │  │ • Compliance    │  │ • Doc Access    │ │
+│  │   Management    │  │ • Strategy      │  │ • Web Scraping  │ │
+│  │                 │  │ • Knowledge Base│  │                 │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    HEALTHCARE DATA LAYER                       │
+│                                                                 │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
+│  │   RCM           │  │   HEALTHCARE    │  │   EXTERNAL      │ │
+│  │   STRUCTURED    │  │   DOCUMENTS     │  │   SOURCES       │ │
+│  │   DATA          │  │                 │  │                 │ │
+│  │ • 14 Tables     │  │ • RCM Policies  │  │ • CMS Data      │ │
+│  │ • 50K+ Claims   │  │ • Procedures    │  │ • Payer Updates │ │
+│  │ • 15 Providers  │  │ • Compliance    │  │ • Industry News │ │
+│  │ • 10 Payers     │  │ • Strategy      │  │ • Market Intel  │ │
+│  │ • 2 Sem Views   │  │ • 5 Services    │  │                 │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Data Flow Explanation:
-1. **Source Repository**: GitHub repository contains both CSV files (20 demo data files) and unstructured documents (PDF)
-2. **Git Integration**: Git API Integration (SF_AI_DEMO_REPO) automatically syncs all files from GitHub to Snowflake's internal stage
-3. **Structured Data**: CSV files populate 13 dimension tables and 4 fact tables in a star schema
-4. **Salesforce CRM Data**: 3 additional Salesforce tables (sf_accounts, sf_opportunities, sf_contacts) provide complete customer journey tracking
-5. **Unstructured Data**: PDF documents are parsed and stored in the `parsed_content` table
-6. **Semantic Layer**: Business-specific semantic views provide natural language query capabilities over structured data
-7. **Marketing Revenue Attribution**: Enhanced Marketing Semantic View connects campaign data to Salesforce CRM for end-to-end ROI analysis
-8. **Cortex Analyst Layer**: Each semantic view connects to a dedicated Text2SQL service for natural language to SQL conversion
-9. **Search Services**: Domain-specific Cortex Search services enable vector search over unstructured documents
-10. **Web Scraping Service**: Custom Python function enables real-time analysis of external web content
-11. **AI Orchestration**: The Snowflake Intelligence Agent orchestrates between Text2SQL services, Search services, and Web Scraping
-12. **User Access**: Users interact through API connections to the agent using natural language queries
+## Healthcare Demo Sample Questions
 
-## Database Schema
+### 🏥 **Client Portfolio & Growth Analysis**
+```sql
+-- Your required demo questions work perfectly with authentic RCM data:
+"How many healthcare provider clients are growing YOY and how many are shrinking? Show me the revenue trends by client."
 
-### Dimension Tables (13)
-- `product_category_dim`, `product_dim`, `vendor_dim`, `customer_dim`
-- `account_dim`, `department_dim`, `region_dim`, `sales_rep_dim`
-- `campaign_dim`, `channel_dim`, `employee_dim`, `job_dim`, `location_dim`
+"Who are my customers that are at risk of churn? Provide a reason why each is at risk based on performance trends and engagement data."
+```
 
-### Fact Tables (4)
-- `sales_fact` - Sales transactions with amounts and units (12,000 records)
-- `finance_transactions` - Financial transactions across departments
-- `marketing_campaign_fact` - Campaign performance metrics with product targeting
-- `hr_employee_fact` - Employee data with salary and attrition (5,640 records)
+### 💰 **Claims Processing Intelligence**
+```sql
+"What is the clean claim rate for each healthcare provider and which need improvement?"
 
-### Salesforce CRM Tables (3)
-- `sf_accounts` - Customer accounts linked to customer_dim (1,000 records)
-- `sf_opportunities` - Sales pipeline and revenue data (25,000 records)
-- `sf_contacts` - Contact records with campaign attribution (37,563 records)
+"Which payers have the highest denial rates and longest payment times?"
 
+"Show me net collection rates by provider specialty and identify underperformers."
+```
 
+### 🔍 **Denials Management Analysis**
+```sql
+"What are the most common denial reason codes and their financial impact?"
 
+"Which denial categories have the highest appeal success rates?"
 
-## Agent Capabilities
+"Show me denial trends by payer and identify problem areas for intervention."
+```
 
-The Company Chatbot Agent can:
-- **Analyze structured data** across Finance, Sales, Marketing, and HR domains
-- **Perform revenue attribution** from marketing campaigns to closed deals via Salesforce CRM integration
-- **Search unstructured documents** to provide context and policy information
-- **Scrape and analyze web content** from any URL to incorporate external data and insights
-- **Generate visualizations** including trend lines, bar charts, and analytics
-- **Combine insights** from multiple data sources for comprehensive answers
-- **Calculate marketing ROI** and customer acquisition costs across the complete customer journey
-- **Understand business context** and provide domain-specific insights
+### 📊 **Operational Efficiency**
+```sql
+"Predict our cash flow for the next 90 days based on current A/R aging and payment patterns."
 
-## Demo Script: Cross-Functional Business Analysis
+"Which RCM staff are most productive at processing claims and appeals?"
 
-The following questions demonstrate the agent's ability to perform cross-domain analysis, connecting insights across Sales, HR, Marketing, and Finance:
+"Show me cost-to-collect metrics by provider and identify optimization opportunities."
+```
 
-### 🎯 Sales Performance Analysis
-1. **Sales Trends & Performance**  
-   "Show me monthly sales trends for 2025 with visualizations. Which months had the highest revenue?"
+### 📄 **Document & Compliance Intelligence**
+```sql
+"Search our denial management policies and procedures for appeal timelines."
 
-2. **Top Products & Revenue Drivers**  
-   "What are our top 5 products by revenue in 2025? Show me their performance by region."
+"Find our HIPAA compliance requirements for claims processing and data handling."
 
-3. **Sales Rep Performance**  
-   "Who are our top performing sales representatives? Show their individual revenue contributions and deal counts."
+"What are our performance standards for claims analysts and denial specialists?"
+```
 
-### 👥 HR & Workforce Analysis
-1. **Sales Rep Tenure & Performance Correlation**  
-   "What is the average tenure of our top sales reps? Is there a correlation between tenure and sales performance?"
+## Getting Started
 
-2. **Department Staffing & Costs**  
-   "Show me employee headcount and average salary by department. Which departments have the highest attrition rates?"
+1. **Execute the 5 setup scripts** in sequence to build your healthcare RCM demo
+2. **Access Snowflake Intelligence** and select the `RCM_Healthcare_Agent`
+3. **Try the sample questions** above to explore RCM analytics capabilities
+4. **Customize for your demos** by adding specific healthcare providers or payer scenarios
 
-3. **Workforce Distribution & Performance**  
-   "How are our employees distributed across locations? What are the performance differences by location?"
-
-### 📈 Marketing Campaign Effectiveness & Revenue Attribution
-1. **Campaign ROI & Revenue Generation**  
-   "Which marketing campaigns generated the most revenue in 2025? Show me marketing ROI and cost per lead by channel."
-
-2. **Complete Funnel Analysis**  
-   "Show me the complete marketing funnel from impressions to closed revenue. Which campaigns have the best conversion rates?"
-
-3. **Channel Revenue Performance**  
-   "Compare marketing spend to actual closed revenue by channel. Which channels drive the highest value customers?"
-
-### 💰 Finance & Cross-Domain Integration
-1. **Marketing Attribution & Revenue Analysis**  
-   "Show me revenue generated by each marketing channel. What is our true marketing ROI from campaigns to closed deals?"
-
-2. **Customer Acquisition Cost Analysis**  
-   "Calculate our customer acquisition cost by marketing channel. Which channels deliver the most profitable customers?"
-
-3. **Vendor Spend & Policy Compliance**  
-   "What are our top vendor expenses? Check our vendor management policy - are we following procurement guidelines?"
-
-### 🔍 Cross-Functional Insights & External Data
-**Web Content Analysis Questions**  
-1. **Competitive Intelligence**  
-   "Analyze the content from [competitor website URL] and compare their product offerings to our product catalog."
-
-2. **Market Research**  
-   "Scrape content from [industry report URL] and analyze how it relates to our sales performance and market positioning."
-
-3. **External Data Integration**  
-   "Get the latest information from [company news URL] and analyze its potential impact on our sales forecast."
-
-
-### 📋 Demo Flow Recommendation
-1. **Start with Sales**: Establish baseline performance metrics and customer data
-2. **Connect to HR**: Link performance to workforce characteristics  
-3. **Add Marketing Context**: Show how campaigns generate leads and drive sales results
-4. **Revenue Attribution**: Demonstrate complete customer journey from campaign to closed revenue
-5. **Financial Integration**: Calculate true marketing ROI and customer acquisition costs
-6. **External Data Analysis**: Use web scraping to incorporate competitor or market data
-7. **Cross-Domain Synthesis**: Combine all insights including external data for strategic decision-making
-
-This progression showcases how the Snowflake Intelligence Agent seamlessly connects structured data analysis with Salesforce CRM integration, unstructured document insights, and real-time web content analysis across all business domains for complete revenue attribution and competitive intelligence. 
+This healthcare RCM demo showcases the full power of Snowflake Intelligence for revenue cycle management companies! 🏥💰
