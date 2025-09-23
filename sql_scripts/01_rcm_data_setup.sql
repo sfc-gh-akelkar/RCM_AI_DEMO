@@ -83,12 +83,8 @@ CREATE OR REPLACE STAGE RCM_DATA_STAGE
 
 ALTER GIT REPOSITORY RCM_DEMO_REPO FETCH;
 
--- Copy data files from Git repository to internal stage
-COPY FILES 
-    FROM @RCM_DEMO_REPO/branches/main/demo_data/
-    TO @RCM_DATA_STAGE/demo_data/;
-
 -- Copy unstructured documents from Git repository to internal stage
+-- (Healthcare data is generated synthetically via script 02_rcm_data_generation.sql)
 COPY FILES 
     FROM @RCM_DEMO_REPO/branches/main/unstructured_docs/
     TO @RCM_DATA_STAGE/unstructured_docs/;
