@@ -36,7 +36,13 @@ GRANT USAGE ON WAREHOUSE RCM_INTELLIGENCE_WH TO ROLE SF_INTELLIGENCE_DEMO;
 ALTER USER IDENTIFIER($current_user_name) SET DEFAULT_ROLE = SF_INTELLIGENCE_DEMO;
 ALTER USER IDENTIFIER($current_user_name) SET DEFAULT_WAREHOUSE = RCM_INTELLIGENCE_WH;
 
--- Note: No external git integration needed - all data and documents are created locally
+-- Create API Integration for GitHub (restore original integration)
+CREATE OR REPLACE API INTEGRATION git_api_integration
+    API_PROVIDER = git_https_api
+    API_ALLOWED_PREFIXES = ('https://github.com/NickAkincilar/')
+    ENABLED = TRUE;
+
+GRANT USAGE ON INTEGRATION GIT_API_INTEGRATION TO ROLE SF_INTELLIGENCE_DEMO;
 
 -- Switch to SF_INTELLIGENCE_DEMO role to create demo objects
 USE ROLE SF_INTELLIGENCE_DEMO;
@@ -63,12 +69,22 @@ CREATE OR REPLACE FILE FORMAT CSV_FORMAT
     TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS'
     NULL_IF = ('NULL', 'null', '', 'N/A', 'n/a');
 
+-- Create Git repository integration for the public demo repository
+CREATE OR REPLACE GIT REPOSITORY RCM_DEMO_REPO
+    API_INTEGRATION = git_api_integration
+    ORIGIN = 'https://github.com/NickAkincilar/Snowflake_AI_DEMO.git';
+
 -- Create internal stage for demo data and documents
 CREATE OR REPLACE STAGE RCM_DATA_STAGE
     FILE_FORMAT = CSV_FORMAT
     COMMENT = 'Internal stage for RCM demo data and documents'
     DIRECTORY = ( ENABLE = TRUE)
     ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
+
+ALTER GIT REPOSITORY RCM_DEMO_REPO FETCH;
+
+-- Note: We don't copy demo_data (deleted) but keep git integration for potential future use
+-- Documents are embedded in script 02_rcm_documents_setup.sql instead of copied from git
 
 -- ========================================================================
 -- DIMENSION TABLES - Healthcare Specific
