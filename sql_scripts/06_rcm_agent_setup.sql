@@ -157,7 +157,7 @@ $$
 FROM SPECIFICATION $$
 {
   "models": {
-    "orchestration": "mixtral-8x7b"
+    "orchestration": ""
   },
   "instructions": {
     "response": "You are a healthcare revenue cycle management (RCM) analyst with deep expertise in claims processing, denial management, payer relations, and healthcare financial operations. You have access to comprehensive healthcare provider data, payer performance metrics, claims and denials data, and healthcare industry documents. When answering questions, focus on RCM-specific KPIs like clean claim rates, denial rates, net collection rates, days in A/R, appeal success rates, and payer performance metrics. Provide visualizations when possible and always relate insights back to revenue cycle optimization and healthcare financial performance. Use healthcare terminology throughout your responses.",
@@ -186,56 +186,49 @@ FROM SPECIFICATION $$
         "type": "cortex_analyst_text_to_sql",
         "name": "Analyze Claims Processing Data",
         "description": "Query and analyze healthcare claims processing data including provider performance, payer behavior, procedure analysis, clean claim rates, denial rates, and financial metrics. Use this for questions about claims volume, processing times, reimbursement patterns, and operational efficiency."
-      },
-      "semantic_model": "RCM_AI_DEMO.RCM_SCHEMA.CLAIMS_PROCESSING_VIEW"
+      }
     },
     {
       "tool_spec": {
         "type": "cortex_analyst_text_to_sql", 
         "name": "Analyze Denials and Appeals Data",
         "description": "Query and analyze denials management data including denial reasons, appeal outcomes, recovery rates, payer-specific denial patterns, and appeal success metrics. Use this for questions about denial trends, appeal effectiveness, and denial management optimization."
-      },
-      "semantic_model": "RCM_AI_DEMO.RCM_SCHEMA.DENIALS_MANAGEMENT_VIEW"
+      }
     },
     {
       "tool_spec": {
         "type": "cortex_search",
         "name": "Search RCM Financial Documents",
         "description": "Search financial policies, vendor contracts, expense procedures, and financial reports related to revenue cycle management. Use for questions about financial policies, contract terms, billing procedures, and financial compliance."
-      },
-      "cortex_search_service": "RCM_AI_DEMO.RCM_SCHEMA.RCM_FINANCE_DOCS_SEARCH"
+      }
     },
     {
       "tool_spec": {
         "type": "cortex_search",
         "name": "Search RCM Operations Documents", 
         "description": "Search operational procedures, employee handbooks, performance guidelines, and training materials for RCM operations. Use for questions about operational policies, staffing procedures, performance standards, and training requirements."
-      },
-      "cortex_search_service": "RCM_AI_DEMO.RCM_SCHEMA.RCM_OPERATIONS_DOCS_SEARCH"
+      }
     },
     {
       "tool_spec": {
         "type": "cortex_search",
         "name": "Search RCM Compliance Documents",
         "description": "Search compliance policies, audit procedures, regulatory requirements, and client success documentation. Use for questions about compliance requirements, audit preparation, regulatory updates, and client implementation best practices."
-      },
-      "cortex_search_service": "RCM_AI_DEMO.RCM_SCHEMA.RCM_COMPLIANCE_DOCS_SEARCH"
+      }
     },
     {
       "tool_spec": {
         "type": "cortex_search",
         "name": "Search RCM Strategy Documents",
         "description": "Search strategic plans, market analysis, competitive intelligence, and growth strategies for healthcare revenue cycle management. Use for questions about strategic planning, market opportunities, competitive analysis, and business development."
-      },
-      "cortex_search_service": "RCM_AI_DEMO.RCM_SCHEMA.RCM_STRATEGY_DOCS_SEARCH"
+      }
     },
     {
       "tool_spec": {
         "type": "cortex_search",
         "name": "Search Healthcare Knowledge Base",
         "description": "Search the comprehensive healthcare RCM knowledge base covering all document types. Use for broad questions that might span multiple areas or when you need to find information across all healthcare documentation."
-      },
-      "cortex_search_service": "RCM_AI_DEMO.RCM_SCHEMA.RCM_KNOWLEDGE_BASE_SEARCH"
+      }
     },
     {
       "tool_spec": {
@@ -254,8 +247,7 @@ FROM SPECIFICATION $$
             "weburl"
           ]
         }
-      },
-      "function": "RCM_AI_DEMO.RCM_SCHEMA.SCRAPE_HEALTHCARE_DATA"
+      }
     },
     {
       "tool_spec": {
@@ -278,8 +270,7 @@ FROM SPECIFICATION $$
             "relative_file_path"
           ]
         }
-      },
-      "function": "RCM_AI_DEMO.RCM_SCHEMA.GET_RCM_DOCUMENT_URL"
+      }
     },
     {
       "tool_spec": {
@@ -308,27 +299,77 @@ FROM SPECIFICATION $$
             "message"
           ]
         }
-      },
-      "function": "RCM_AI_DEMO.RCM_SCHEMA.SEND_RCM_ALERT"
+      }
     }
   ],
-  "cortex_search_services": [
-    {
-      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_FINANCE_DOCS_SEARCH"
+  "tool_resources": {
+    "Analyze Claims Processing Data": {
+      "semantic_view": "RCM_AI_DEMO.RCM_SCHEMA.CLAIMS_PROCESSING_VIEW"
     },
-    {
-      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_OPERATIONS_DOCS_SEARCH"
+    "Analyze Denials and Appeals Data": {
+      "semantic_view": "RCM_AI_DEMO.RCM_SCHEMA.DENIALS_MANAGEMENT_VIEW"
     },
-    {
-      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_COMPLIANCE_DOCS_SEARCH"
+    "Search RCM Financial Documents": {
+      "id_column": "RELATIVE_PATH",
+      "max_results": 5,
+      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_FINANCE_DOCS_SEARCH",
+      "title_column": "TITLE"
     },
-    {
-      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_STRATEGY_DOCS_SEARCH"
+    "Search RCM Operations Documents": {
+      "id_column": "RELATIVE_PATH",
+      "max_results": 5,
+      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_OPERATIONS_DOCS_SEARCH",
+      "title_column": "TITLE"
     },
-    {
-      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_KNOWLEDGE_BASE_SEARCH"
+    "Search RCM Compliance Documents": {
+      "id_column": "RELATIVE_PATH",
+      "max_results": 5,
+      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_COMPLIANCE_DOCS_SEARCH",
+      "title_column": "TITLE"
+    },
+    "Search RCM Strategy Documents": {
+      "id_column": "RELATIVE_PATH",
+      "max_results": 5,
+      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_STRATEGY_DOCS_SEARCH",
+      "title_column": "TITLE"
+    },
+    "Search Healthcare Knowledge Base": {
+      "id_column": "RELATIVE_PATH",
+      "max_results": 5,
+      "name": "RCM_AI_DEMO.RCM_SCHEMA.RCM_KNOWLEDGE_BASE_SEARCH",
+      "title_column": "TITLE"
+    },
+    "Scrape Healthcare Market Data": {
+      "execution_environment": {
+        "query_timeout": 120,
+        "type": "warehouse",
+        "warehouse": "RCM_INTELLIGENCE_WH"
+      },
+      "identifier": "RCM_AI_DEMO.RCM_SCHEMA.SCRAPE_HEALTHCARE_DATA",
+      "name": "SCRAPE_HEALTHCARE_DATA(VARCHAR)",
+      "type": "function"
+    },
+    "Generate Document Download Link": {
+      "execution_environment": {
+        "query_timeout": 30,
+        "type": "warehouse",
+        "warehouse": "RCM_INTELLIGENCE_WH"
+      },
+      "identifier": "RCM_AI_DEMO.RCM_SCHEMA.GET_RCM_DOCUMENT_URL",
+      "name": "GET_RCM_DOCUMENT_URL(VARCHAR, DEFAULT INTEGER)",
+      "type": "procedure"
+    },
+    "Send RCM Alert": {
+      "execution_environment": {
+        "query_timeout": 30,
+        "type": "warehouse",
+        "warehouse": "RCM_INTELLIGENCE_WH"
+      },
+      "identifier": "RCM_AI_DEMO.RCM_SCHEMA.SEND_RCM_ALERT",
+      "name": "SEND_RCM_ALERT(VARCHAR, VARCHAR, VARCHAR)",
+      "type": "procedure"
     }
-  ]
+  }
 }
 $$;
 
