@@ -30,67 +30,67 @@ relationships (
     CLAIMS_TO_EMPLOYEES as CLAIMS(EMPLOYEE_KEY) references EMPLOYEES(EMPLOYEE_KEY)
 )
 facts (
-    CLAIMS.CHARGE_AMOUNT as charge_amount,
-    CLAIMS.ALLOWED_AMOUNT as allowed_amount,
-    CLAIMS.PAID_AMOUNT as paid_amount,
-    CLAIMS.PATIENT_RESPONSIBILITY as patient_responsibility,
-    CLAIMS.DAYS_TO_PAYMENT as days_to_payment
+    CLAIMS.CHARGE_AMOUNT as CHARGE_AMOUNT,
+    CLAIMS.ALLOWED_AMOUNT as ALLOWED_AMOUNT,
+    CLAIMS.PAID_AMOUNT as PAID_AMOUNT,
+    CLAIMS.PATIENT_RESPONSIBILITY as PATIENT_RESPONSIBILITY,
+    CLAIMS.DAYS_TO_PAYMENT as DAYS_TO_PAYMENT
 )
 dimensions (
-    CLAIMS.SUBMISSION_DATE as submission_date,
-    CLAIMS.SERVICE_DATE as service_date,
-    CLAIMS.CLAIM_STATUS as claim_status,
-    CLAIMS.PAYMENT_STATUS as payment_status,
-    CLAIMS.CLEAN_CLAIM_FLAG as clean_claim,
-    CLAIMS.DENIAL_FLAG as denied,
-    CLAIMS.APPEAL_FLAG as appealed,
-    PROVIDERS.PROVIDER_NAME as provider_name,
-    PROVIDERS.PROVIDER_TYPE as provider_type,
-    PROVIDERS.SPECIALTY as provider_specialty,
-    PROVIDERS.ANNUAL_REVENUE as provider_revenue,
-    PAYERS.PAYER_NAME as payer_name,
-    PAYERS.PAYER_TYPE as payer_type,
-    PAYERS.MARKET_SHARE as payer_market_share,
-    PAYERS.AVG_DAYS_TO_PAY as payer_avg_days,
-    PROCEDURES.CPT_CODE as cpt_code,
-    PROCEDURES.PROCEDURE_NAME as procedure_name,
-    PROCEDURES.CATEGORY as procedure_category,
-    PROCEDURES.RELATIVE_VALUE_UNITS as procedure_charge,
-    SPECIALTIES.SPECIALTY_NAME as specialty_name,
-    SPECIALTIES.DESCRIPTION as specialty_description,
-    REGIONS.REGION_NAME as region_name,
-    REGIONS.STATE_LIST as state,
-    EMPLOYEES.DEPARTMENT as employee_department,
-    EMPLOYEES.ROLE as employee_role
+    CLAIMS.SUBMISSION_DATE as SUBMISSION_DATE,
+    CLAIMS.SERVICE_DATE as SERVICE_DATE,
+    CLAIMS.CLAIM_STATUS as CLAIM_STATUS,
+    CLAIMS.PAYMENT_STATUS as PAYMENT_STATUS,
+    CLAIMS.CLEAN_CLAIM_FLAG as CLEAN_CLAIM_FLAG,
+    CLAIMS.DENIAL_FLAG as DENIAL_FLAG,
+    CLAIMS.APPEAL_FLAG as APPEAL_FLAG,
+    PROVIDERS.PROVIDER_NAME as PROVIDER_NAME,
+    PROVIDERS.PROVIDER_TYPE as PROVIDER_TYPE,
+    PROVIDERS.SPECIALTY as SPECIALTY,
+    PROVIDERS.ANNUAL_REVENUE as ANNUAL_REVENUE,
+    PAYERS.PAYER_NAME as PAYER_NAME,
+    PAYERS.PAYER_TYPE as PAYER_TYPE,
+    PAYERS.MARKET_SHARE as MARKET_SHARE,
+    PAYERS.AVG_DAYS_TO_PAY as AVG_DAYS_TO_PAY,
+    PROCEDURES.CPT_CODE as CPT_CODE,
+    PROCEDURES.PROCEDURE_NAME as PROCEDURE_NAME,
+    PROCEDURES.CATEGORY as CATEGORY,
+    PROCEDURES.RELATIVE_VALUE_UNITS as RELATIVE_VALUE_UNITS,
+    SPECIALTIES.SPECIALTY_NAME as SPECIALTY_NAME,
+    SPECIALTIES.SPECIALTY_TYPE as SPECIALTY_TYPE,
+    REGIONS.REGION_NAME as REGION_NAME,
+    REGIONS.STATE as STATE,
+    EMPLOYEES.DEPARTMENT as DEPARTMENT,
+    EMPLOYEES.ROLE as ROLE
 )
 metrics (
     CLAIMS.TOTAL_CLAIMS as COUNT(*)
         WITH SYNONYMS = ('total claims', 'claim count', 'number of claims'),
-    CLAIMS.CLEAN_CLAIMS as COUNT(CASE WHEN clean_claim_flag THEN 1 END)
+    CLAIMS.CLEAN_CLAIMS as COUNT(CASE WHEN CLEAN_CLAIM_FLAG THEN 1 END)
         WITH SYNONYMS = ('clean claims', 'first pass claims'),
-    CLAIMS.DENIED_CLAIMS as COUNT(CASE WHEN denial_flag THEN 1 END)
+    CLAIMS.DENIED_CLAIMS as COUNT(CASE WHEN DENIAL_FLAG THEN 1 END)
         WITH SYNONYMS = ('denied claims', 'claim denials'),
-    CLAIMS.APPEALED_CLAIMS as COUNT(CASE WHEN appeal_flag THEN 1 END)
+    CLAIMS.APPEALED_CLAIMS as COUNT(CASE WHEN APPEAL_FLAG THEN 1 END)
         WITH SYNONYMS = ('appealed claims', 'claims under appeal'),
-    CLAIMS.TOTAL_CHARGES as SUM(charge_amount)
+    CLAIMS.TOTAL_CHARGES as SUM(CHARGE_AMOUNT)
         WITH SYNONYMS = ('total charges', 'gross charges', 'billed amount'),
-    CLAIMS.TOTAL_ALLOWED as SUM(allowed_amount)
+    CLAIMS.TOTAL_ALLOWED as SUM(ALLOWED_AMOUNT)
         WITH SYNONYMS = ('total allowed', 'allowed amounts'),
-    CLAIMS.TOTAL_PAID as SUM(paid_amount)
+    CLAIMS.TOTAL_PAID as SUM(PAID_AMOUNT)
         WITH SYNONYMS = ('total paid', 'payments received', 'collections'),
-    CLAIMS.TOTAL_PATIENT_RESPONSIBILITY as SUM(patient_responsibility)
+    CLAIMS.TOTAL_PATIENT_RESPONSIBILITY as SUM(PATIENT_RESPONSIBILITY)
         WITH SYNONYMS = ('patient responsibility', 'patient portion', 'copays and deductibles'),
-    CLAIMS.CLEAN_CLAIM_RATE as (COUNT(CASE WHEN clean_claim_flag THEN 1 END) / COUNT(*) * 100)
+    CLAIMS.CLEAN_CLAIM_RATE as (COUNT(CASE WHEN CLEAN_CLAIM_FLAG THEN 1 END) / COUNT(*) * 100)
         WITH SYNONYMS = ('clean claim rate', 'first pass rate', 'acceptance rate'),
-    CLAIMS.DENIAL_RATE as (COUNT(CASE WHEN denial_flag THEN 1 END) / COUNT(*) * 100)
+    CLAIMS.DENIAL_RATE as (COUNT(CASE WHEN DENIAL_FLAG THEN 1 END) / COUNT(*) * 100)
         WITH SYNONYMS = ('denial rate', 'rejection rate'),
-    CLAIMS.NET_COLLECTION_RATE as (SUM(paid_amount) / SUM(charge_amount) * 100)
+    CLAIMS.NET_COLLECTION_RATE as (SUM(PAID_AMOUNT) / SUM(CHARGE_AMOUNT) * 100)
         WITH SYNONYMS = ('net collection rate', 'collection rate', 'reimbursement rate'),
-    CLAIMS.AVERAGE_DAYS_TO_PAYMENT as AVG(days_to_payment)
+    CLAIMS.AVERAGE_DAYS_TO_PAYMENT as AVG(DAYS_TO_PAYMENT)
         WITH SYNONYMS = ('average days to payment', 'payment cycle time', 'days in AR'),
-    CLAIMS.AVERAGE_CHARGE as AVG(charge_amount)
+    CLAIMS.AVERAGE_CHARGE as AVG(CHARGE_AMOUNT)
         WITH SYNONYMS = ('average charge', 'average billed amount'),
-    CLAIMS.AVERAGE_PAID as AVG(paid_amount)
+    CLAIMS.AVERAGE_PAID as AVG(PAID_AMOUNT)
         WITH SYNONYMS = ('average payment', 'average reimbursement')
 );
 
@@ -117,54 +117,54 @@ relationships (
     DENIALS_TO_EMPLOYEES as DENIALS(EMPLOYEE_KEY) references EMPLOYEES(EMPLOYEE_KEY)
 )
 facts (
-    DENIALS.DENIED_AMOUNT as denied_amount,
-    DENIALS.RECOVERED_AMOUNT as recovered_amount,
-    DENIALS.DAYS_TO_APPEAL as days_to_appeal,
-    DENIALS.DAYS_TO_RESOLUTION as days_to_resolution
+    DENIALS.DENIED_AMOUNT as DENIED_AMOUNT,
+    DENIALS.RECOVERED_AMOUNT as RECOVERED_AMOUNT,
+    DENIALS.DAYS_TO_APPEAL as DAYS_TO_APPEAL,
+    DENIALS.DAYS_TO_RESOLUTION as DAYS_TO_RESOLUTION
 )
 dimensions (
-    DENIALS.DENIAL_DATE as denial_date,
-    DENIALS.DENIAL_STATUS as denial_status,
-    DENIALS.APPEAL_OUTCOME as appeal_outcome,
-    PROVIDERS.PROVIDER_NAME as provider_name,
-    PROVIDERS.PROVIDER_TYPE as provider_type,
-    PROVIDERS.SPECIALTY as provider_specialty,
-    PAYERS.PAYER_NAME as payer_name,
-    PAYERS.PAYER_TYPE as payer_type,
-    DENIAL_REASONS.DENIAL_CODE as denial_code,
-    DENIAL_REASONS.DENIAL_DESCRIPTION as denial_description,
-    DENIAL_REASONS.CATEGORY as denial_category,
-    DENIAL_REASONS.APPEALABLE as appealable,
-    DENIAL_REASONS.SUCCESS_RATE as historical_success_rate,
-    APPEALS.APPEAL_TYPE as appeal_type,
-    APPEALS.AVG_RESOLUTION_DAYS as appeal_avg_days,
-    EMPLOYEES.DEPARTMENT as employee_department,
-    EMPLOYEES.ROLE as employee_role
+    DENIALS.DENIAL_DATE as DENIAL_DATE,
+    DENIALS.DENIAL_STATUS as DENIAL_STATUS,
+    DENIALS.APPEAL_OUTCOME as APPEAL_OUTCOME,
+    PROVIDERS.PROVIDER_NAME as PROVIDER_NAME,
+    PROVIDERS.PROVIDER_TYPE as PROVIDER_TYPE,
+    PROVIDERS.SPECIALTY as SPECIALTY,
+    PAYERS.PAYER_NAME as PAYER_NAME,
+    PAYERS.PAYER_TYPE as PAYER_TYPE,
+    DENIAL_REASONS.DENIAL_CODE as DENIAL_CODE,
+    DENIAL_REASONS.DENIAL_DESCRIPTION as DENIAL_DESCRIPTION,
+    DENIAL_REASONS.CATEGORY as CATEGORY,
+    DENIAL_REASONS.APPEALABLE as APPEALABLE,
+    DENIAL_REASONS.SUCCESS_RATE as SUCCESS_RATE,
+    APPEALS.APPEAL_TYPE as APPEAL_TYPE,
+    APPEALS.FILING_DEADLINE_DAYS as FILING_DEADLINE_DAYS,
+    EMPLOYEES.DEPARTMENT as DEPARTMENT,
+    EMPLOYEES.ROLE as ROLE
 )
 metrics (
     DENIALS.TOTAL_DENIALS as COUNT(*)
         WITH SYNONYMS = ('total denials', 'denial count', 'number of denials'),
-    DENIALS.APPEALED_DENIALS as COUNT(CASE WHEN days_to_appeal IS NOT NULL THEN 1 END)
+    DENIALS.APPEALED_DENIALS as COUNT(CASE WHEN DAYS_TO_APPEAL IS NOT NULL THEN 1 END)
         WITH SYNONYMS = ('appealed denials', 'denials under appeal'),
-    DENIALS.RESOLVED_DENIALS as COUNT(CASE WHEN days_to_resolution IS NOT NULL THEN 1 END)
+    DENIALS.RESOLVED_DENIALS as COUNT(CASE WHEN DAYS_TO_RESOLUTION IS NOT NULL THEN 1 END)
         WITH SYNONYMS = ('resolved denials', 'closed denials'),
-    DENIALS.TOTAL_DENIED_AMOUNT as SUM(denied_amount)
+    DENIALS.TOTAL_DENIED_AMOUNT as SUM(DENIED_AMOUNT)
         WITH SYNONYMS = ('total denied amount', 'denied dollars', 'lost revenue'),
-    DENIALS.TOTAL_RECOVERED_AMOUNT as SUM(recovered_amount)
+    DENIALS.TOTAL_RECOVERED_AMOUNT as SUM(RECOVERED_AMOUNT)
         WITH SYNONYMS = ('total recovered', 'appeal recoveries', 'recovered revenue'),
-    DENIALS.AVERAGE_DENIED_AMOUNT as AVG(denied_amount)
+    DENIALS.AVERAGE_DENIED_AMOUNT as AVG(DENIED_AMOUNT)
         WITH SYNONYMS = ('average denial amount', 'mean denial value'),
-    DENIALS.APPEAL_RATE as (COUNT(CASE WHEN days_to_appeal IS NOT NULL THEN 1 END) / COUNT(*) * 100)
+    DENIALS.APPEAL_RATE as (COUNT(CASE WHEN DAYS_TO_APPEAL IS NOT NULL THEN 1 END) / COUNT(*) * 100)
         WITH SYNONYMS = ('appeal rate', 'percentage appealed'),
-    DENIALS.RECOVERY_RATE as (SUM(recovered_amount) / SUM(denied_amount) * 100)
+    DENIALS.RECOVERY_RATE as (SUM(RECOVERED_AMOUNT) / SUM(DENIED_AMOUNT) * 100)
         WITH SYNONYMS = ('recovery rate', 'appeal success percentage'),
-    DENIALS.AVERAGE_DAYS_TO_APPEAL as AVG(days_to_appeal)
+    DENIALS.AVERAGE_DAYS_TO_APPEAL as AVG(DAYS_TO_APPEAL)
         WITH SYNONYMS = ('average days to appeal', 'appeal timing'),
-    DENIALS.AVERAGE_DAYS_TO_RESOLUTION as AVG(days_to_resolution)
+    DENIALS.AVERAGE_DAYS_TO_RESOLUTION as AVG(DAYS_TO_RESOLUTION)
         WITH SYNONYMS = ('average resolution time', 'time to resolve'),
-    DENIALS.SUCCESSFUL_APPEALS as COUNT(CASE WHEN appeal_outcome IN ('Approved', 'Partial') THEN 1 END)
+    DENIALS.SUCCESSFUL_APPEALS as COUNT(CASE WHEN APPEAL_OUTCOME IN ('Approved', 'Partial') THEN 1 END)
         WITH SYNONYMS = ('successful appeals', 'won appeals'),
-    DENIALS.APPEAL_SUCCESS_RATE as (COUNT(CASE WHEN appeal_outcome IN ('Approved', 'Partial') THEN 1 END) / COUNT(CASE WHEN days_to_appeal IS NOT NULL THEN 1 END) * 100)
+    DENIALS.APPEAL_SUCCESS_RATE as (COUNT(CASE WHEN APPEAL_OUTCOME IN ('Approved', 'Partial') THEN 1 END) / COUNT(CASE WHEN DAYS_TO_APPEAL IS NOT NULL THEN 1 END) * 100)
         WITH SYNONYMS = ('appeal success rate', 'win rate for appeals')
 );
 
