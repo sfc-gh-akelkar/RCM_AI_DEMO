@@ -27,7 +27,7 @@ FROM rcm_document_content;
 
 -- Search service for RCM financial documents
 -- Covers: Financial reports, expense policies, vendor contracts
-CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_finance_docs_search
+CREATE OR REPLACE CORTEX SEARCH SERVICE RCM_FINANCE_DOCS_SEARCH
     ON content
     ATTRIBUTES relative_path, file_url, title
     WAREHOUSE = RCM_INTELLIGENCE_WH
@@ -52,7 +52,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_finance_docs_search
 
 -- Search service for RCM operations and HR documents  
 -- Covers: Employee handbooks, performance guidelines, operational procedures
-CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_operations_docs_search
+CREATE OR REPLACE CORTEX SEARCH SERVICE RCM_OPERATIONS_DOCS_SEARCH
     ON content
     ATTRIBUTES relative_path, file_url, title
     WAREHOUSE = RCM_INTELLIGENCE_WH
@@ -77,7 +77,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_operations_docs_search
 
 -- Search service for RCM compliance and sales documents
 -- Covers: Compliance policies, client success stories, sales materials
-CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_compliance_docs_search
+CREATE OR REPLACE CORTEX SEARCH SERVICE RCM_COMPLIANCE_DOCS_SEARCH
     ON content
     ATTRIBUTES relative_path, file_url, title
     WAREHOUSE = RCM_INTELLIGENCE_WH
@@ -102,7 +102,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_compliance_docs_search
 
 -- Search service for RCM strategy and marketing documents
 -- Covers: Strategic plans, market analysis, competitive intelligence
-CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_strategy_docs_search
+CREATE OR REPLACE CORTEX SEARCH SERVICE RCM_STRATEGY_DOCS_SEARCH
     ON content
     ATTRIBUTES relative_path, file_url, title
     WAREHOUSE = RCM_INTELLIGENCE_WH
@@ -131,7 +131,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_strategy_docs_search
 
 -- Create comprehensive healthcare knowledge base search
 -- Combines all documents for cross-functional healthcare intelligence
-CREATE OR REPLACE CORTEX SEARCH SERVICE rcm_knowledge_base_search
+CREATE OR REPLACE CORTEX SEARCH SERVICE RCM_KNOWLEDGE_BASE_SEARCH
     ON content
     ATTRIBUTES relative_path, file_url, title, document_type
     WAREHOUSE = RCM_INTELLIGENCE_WH
@@ -177,14 +177,14 @@ SHOW CORTEX SEARCH SERVICES;
 -- Test search functionality with healthcare-specific queries
 SELECT 'Testing RCM Finance Search...' as test_step;
 SELECT * FROM TABLE(
-    rcm_ai_demo.rcm_schema.rcm_finance_docs_search(
+    rcm_ai_demo.rcm_schema.RCM_FINANCE_DOCS_SEARCH(
         'denial management policies and procedures'
     )
 ) LIMIT 3;
 
 SELECT 'Testing RCM Knowledge Base Search...' as test_step;
 SELECT * FROM TABLE(
-    rcm_ai_demo.rcm_schema.rcm_knowledge_base_search(
+    rcm_ai_demo.rcm_schema.RCM_KNOWLEDGE_BASE_SEARCH(
         'revenue cycle optimization strategies'
     )
 ) LIMIT 3;
