@@ -524,10 +524,10 @@ The healthcare RCM market continues to grow driven by regulatory complexity, pay
 The RCM market will continue consolidating around technology-enabled providers who can demonstrate measurable improvements in financial performance while reducing administrative burden.');
 
 -- Create stage directories and upload documents
-PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/finance/;
-PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/operations/;
-PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/compliance/;
-PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/strategy/;
+--PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/finance/;
+--PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/operations/;
+--PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/compliance/;
+--PUT file:///dev/null @RCM_DATA_STAGE/unstructured_docs/strategy/;
 
 -- Create files from document content
 CREATE OR REPLACE TEMPORARY TABLE doc_files AS

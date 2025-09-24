@@ -15,7 +15,7 @@ GRANT USAGE ON DATABASE snowflake_intelligence TO ROLE PUBLIC;
 GRANT USAGE ON SCHEMA snowflake_intelligence.agents TO ROLE PUBLIC;
 
 -- Create role for RCM demo
-CREATE OR REPLACE ROLE SF_INTELLIGENCE_DEMO;
+--CREATE OR REPLACE ROLE SF_INTELLIGENCE_DEMO;
 
 SET current_user_name = CURRENT_USER();
 
@@ -103,6 +103,7 @@ CREATE OR REPLACE TABLE payers_dim (
     address VARCHAR(200),
     city VARCHAR(100),
     state VARCHAR(10),
+    zip VARCHAR(20),
     created_date DATE
 );
 
