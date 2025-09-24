@@ -44,9 +44,6 @@ dimensions (
     CLAIMS.CLEAN_CLAIM_FLAG as clean_claim,
     CLAIMS.DENIAL_FLAG as denied,
     CLAIMS.APPEAL_FLAG as appealed,
-    MONTH(CLAIMS.SUBMISSION_DATE) as submission_month,
-    YEAR(CLAIMS.SUBMISSION_DATE) as submission_year,
-    QUARTER(CLAIMS.SUBMISSION_DATE) as submission_quarter,
     PROVIDERS.PROVIDER_NAME as provider_name,
     PROVIDERS.PROVIDER_TYPE as provider_type,
     PROVIDERS.SPECIALTY as provider_specialty,
@@ -127,9 +124,6 @@ facts (
 )
 dimensions (
     DENIALS.DENIAL_DATE as denial_date,
-    MONTH(DENIALS.DENIAL_DATE) as denial_month,
-    YEAR(DENIALS.DENIAL_DATE) as denial_year,
-    QUARTER(DENIALS.DENIAL_DATE) as denial_quarter,
     DENIALS.DENIAL_STATUS as denial_status,
     DENIALS.APPEAL_OUTCOME as appeal_outcome,
     PROVIDERS.PROVIDER_NAME as provider_name,
