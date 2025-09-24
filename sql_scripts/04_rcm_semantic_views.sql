@@ -42,20 +42,19 @@ tables (
         comment='Revenue cycle management staff and analysts'
 )
 relationships (
-    CLAIMS_TO_PROVIDERS as CLAIMS_FACT(PROVIDER_KEY) references HEALTHCARE_PROVIDERS_DIM(PROVIDER_KEY),
-    CLAIMS_TO_PAYERS as CLAIMS_FACT(PAYER_KEY) references PAYERS_DIM(PAYER_KEY),
-    CLAIMS_TO_PROCEDURES as CLAIMS_FACT(PROCEDURE_KEY) references PROCEDURES_DIM(PROCEDURE_KEY),
-    CLAIMS_TO_SPECIALTIES as CLAIMS_FACT(SPECIALTY_KEY) references PROVIDER_SPECIALTIES_DIM(SPECIALTY_KEY),
-    CLAIMS_TO_REGIONS as CLAIMS_FACT(REGION_KEY) references GEOGRAPHIC_REGIONS_DIM(REGION_KEY),
-    CLAIMS_TO_EMPLOYEES as CLAIMS_FACT(EMPLOYEE_KEY) references RCM_EMPLOYEES_DIM(EMPLOYEE_KEY)
+    CLAIMS_TO_PROVIDERS: CLAIMS_FACT(PROVIDER_KEY) references HEALTHCARE_PROVIDERS_DIM(PROVIDER_KEY),
+    CLAIMS_TO_PAYERS: CLAIMS_FACT(PAYER_KEY) references PAYERS_DIM(PAYER_KEY),
+    CLAIMS_TO_PROCEDURES: CLAIMS_FACT(PROCEDURE_KEY) references PROCEDURES_DIM(PROCEDURE_KEY),
+    CLAIMS_TO_SPECIALTIES: CLAIMS_FACT(SPECIALTY_KEY) references PROVIDER_SPECIALTIES_DIM(SPECIALTY_KEY),
+    CLAIMS_TO_REGIONS: CLAIMS_FACT(REGION_KEY) references GEOGRAPHIC_REGIONS_DIM(REGION_KEY),
+    CLAIMS_TO_EMPLOYEES: CLAIMS_FACT(EMPLOYEE_KEY) references RCM_EMPLOYEES_DIM(EMPLOYEE_KEY)
 )
 facts (
     CLAIMS_FACT.CHARGE_AMOUNT as charge_amount comment='Original charge amount billed',
     CLAIMS_FACT.ALLOWED_AMOUNT as allowed_amount comment='Insurance allowed amount',
     CLAIMS_FACT.PAID_AMOUNT as paid_amount comment='Amount actually paid by payer',
     CLAIMS_FACT.PATIENT_RESPONSIBILITY as patient_responsibility comment='Patient copay, deductible, and coinsurance',
-    CLAIMS_FACT.DAYS_TO_PAYMENT as days_to_payment comment='Days from submission to payment',
-    1 as claim_record comment='Count of claims for volume metrics'
+    CLAIMS_FACT.DAYS_TO_PAYMENT as days_to_payment comment='Days from submission to payment'
 )
 dimensions (
     -- Claim attributes
@@ -104,29 +103,29 @@ dimensions (
 )
 metrics (
     -- Volume metrics
-    CLAIMS_FACT.TOTAL_CLAIMS as COUNT(claims_fact.claim_record) comment='Total number of claims',
-    CLAIMS_FACT.CLEAN_CLAIMS as COUNT(CASE WHEN claims_fact.clean_claim_flag THEN claims_fact.claim_record END) comment='Number of clean claims',
-    CLAIMS_FACT.DENIED_CLAIMS as COUNT(CASE WHEN claims_fact.denial_flag THEN claims_fact.claim_record END) comment='Number of denied claims',
-    CLAIMS_FACT.APPEALED_CLAIMS as COUNT(CASE WHEN claims_fact.appeal_flag THEN claims_fact.claim_record END) comment='Number of appealed claims',
+    total_claims: COUNT(*) comment='Total number of claims',
+    clean_claims: COUNT(CASE WHEN CLAIMS_FACT.clean_claim_flag THEN 1 END) comment='Number of clean claims',
+    denied_claims: COUNT(CASE WHEN CLAIMS_FACT.denial_flag THEN 1 END) comment='Number of denied claims',
+    appealed_claims: COUNT(CASE WHEN CLAIMS_FACT.appeal_flag THEN 1 END) comment='Number of appealed claims',
     
     -- Financial metrics
-    CLAIMS_FACT.TOTAL_CHARGES as SUM(claims_fact.charge_amount) comment='Total charge amounts',
-    CLAIMS_FACT.TOTAL_ALLOWED as SUM(claims_fact.allowed_amount) comment='Total allowed amounts',
-    CLAIMS_FACT.TOTAL_PAID as SUM(claims_fact.paid_amount) comment='Total paid amounts',
-    CLAIMS_FACT.TOTAL_PATIENT_RESPONSIBILITY as SUM(claims_fact.patient_responsibility) comment='Total patient responsibility',
+    total_charges: SUM(CLAIMS_FACT.charge_amount) comment='Total charge amounts',
+    total_allowed: SUM(CLAIMS_FACT.allowed_amount) comment='Total allowed amounts',
+    total_paid: SUM(CLAIMS_FACT.paid_amount) comment='Total paid amounts',
+    total_patient_responsibility: SUM(CLAIMS_FACT.patient_responsibility) comment='Total patient responsibility',
     
     -- Performance metrics
-    CLAIMS_FACT.CLEAN_CLAIM_RATE as (COUNT(CASE WHEN claims_fact.clean_claim_flag THEN claims_fact.claim_record END) / COUNT(claims_fact.claim_record) * 100) comment='Clean claim rate percentage',
-    CLAIMS_FACT.DENIAL_RATE as (COUNT(CASE WHEN claims_fact.denial_flag THEN claims_fact.claim_record END) / COUNT(claims_fact.claim_record) * 100) comment='Denial rate percentage',
-    CLAIMS_FACT.NET_COLLECTION_RATE as (SUM(claims_fact.paid_amount) / SUM(claims_fact.charge_amount) * 100) comment='Net collection rate percentage',
-    CLAIMS_FACT.AVERAGE_DAYS_TO_PAYMENT as AVG(claims_fact.days_to_payment) comment='Average days from submission to payment',
-    CLAIMS_FACT.MEDIAN_DAYS_TO_PAYMENT as MEDIAN(claims_fact.days_to_payment) comment='Median days from submission to payment',
+    clean_claim_rate: (COUNT(CASE WHEN CLAIMS_FACT.clean_claim_flag THEN 1 END) / COUNT(*) * 100) comment='Clean claim rate percentage',
+    denial_rate: (COUNT(CASE WHEN CLAIMS_FACT.denial_flag THEN 1 END) / COUNT(*) * 100) comment='Denial rate percentage',
+    net_collection_rate: (SUM(CLAIMS_FACT.paid_amount) / SUM(CLAIMS_FACT.charge_amount) * 100) comment='Net collection rate percentage',
+    average_days_to_payment: AVG(CLAIMS_FACT.days_to_payment) comment='Average days from submission to payment',
+    median_days_to_payment: MEDIAN(CLAIMS_FACT.days_to_payment) comment='Median days from submission to payment',
     
     -- Reimbursement metrics
-    CLAIMS_FACT.AVERAGE_CHARGE as AVG(claims_fact.charge_amount) comment='Average charge amount per claim',
-    CLAIMS_FACT.AVERAGE_ALLOWED as AVG(claims_fact.allowed_amount) comment='Average allowed amount per claim',
-    CLAIMS_FACT.AVERAGE_PAID as AVG(claims_fact.paid_amount) comment='Average paid amount per claim',
-    CLAIMS_FACT.CONTRACTUAL_ADJUSTMENT_RATE as ((SUM(claims_fact.charge_amount) - SUM(claims_fact.allowed_amount)) / SUM(claims_fact.charge_amount) * 100) comment='Contractual adjustment rate percentage'
+    average_charge: AVG(CLAIMS_FACT.charge_amount) comment='Average charge amount per claim',
+    average_allowed: AVG(CLAIMS_FACT.allowed_amount) comment='Average allowed amount per claim',
+    average_paid: AVG(CLAIMS_FACT.paid_amount) comment='Average paid amount per claim',
+    contractual_adjustment_rate: ((SUM(CLAIMS_FACT.charge_amount) - SUM(CLAIMS_FACT.allowed_amount)) / SUM(CLAIMS_FACT.charge_amount) * 100) comment='Contractual adjustment rate percentage'
 )
 comment='Comprehensive view for healthcare claims processing and revenue cycle analysis'
 with extension (CA='{"tables":[{"name":"CLAIMS","dimensions":[{"name":"SUBMISSION_DATE","sample_values":["2024-01-15","2024-02-20","2024-03-10"]},{"name":"CLAIM_STATUS","sample_values":["Paid","Denied","Appealed","Pending"]},{"name":"PAYMENT_STATUS","sample_values":["Full","Partial","Denied","Pending"]},{"name":"CLEAN_CLAIM_FLAG","sample_values":["true","false"]}],"facts":[{"name":"CHARGE_AMOUNT"},{"name":"PAID_AMOUNT"},{"name":"DAYS_TO_PAYMENT"}],"metrics":[{"name":"TOTAL_CLAIMS"},{"name":"CLEAN_CLAIM_RATE"},{"name":"DENIAL_RATE"},{"name":"NET_COLLECTION_RATE"}]},{"name":"PROVIDERS","dimensions":[{"name":"PROVIDER_NAME","sample_values":["Ann & Robert H. Lurie Children''s Hospital","Northwestern Memorial Hospital","Rush University Medical Center"]},{"name":"PROVIDER_TYPE","sample_values":["Children''s Hospital","Academic Medical Center","Specialty Practice"]},{"name":"SPECIALTY","sample_values":["Pediatrics","Multi-Specialty","Orthopedics"]}]},{"name":"PAYERS","dimensions":[{"name":"PAYER_NAME","sample_values":["Blue Cross Blue Shield of Illinois","UnitedHealthcare","Medicare","Medicaid (Illinois)"]},{"name":"PAYER_TYPE","sample_values":["Commercial","Government","Self-Pay"]}]}],"relationships":[{"name":"CLAIMS_TO_PROVIDERS","relationship_type":"many_to_one"},{"name":"CLAIMS_TO_PAYERS","relationship_type":"many_to_one"}],"verified_queries":[{"name":"Clean claim rate by provider","question":"What is the clean claim rate for each healthcare provider?","sql":"SELECT\\n  p.provider_name,\\n  COUNT(c.claim_id) AS total_claims,\\n  COUNT(CASE WHEN c.clean_claim_flag THEN 1 END) AS clean_claims,\\n  (COUNT(CASE WHEN c.clean_claim_flag THEN 1 END) / COUNT(c.claim_id) * 100) AS clean_claim_rate\\nFROM\\n  claims AS c\\n  JOIN providers AS p ON c.provider_key = p.provider_key\\nGROUP BY\\n  p.provider_name\\nORDER BY\\n  clean_claim_rate DESC","use_as_onboarding_question":true,"verified_by":"System","verified_at":1704067200},{"name":"Denial rates by payer","question":"Which payers have the highest denial rates?","sql":"SELECT\\n  py.payer_name,\\n  COUNT(c.claim_id) AS total_claims,\\n  COUNT(CASE WHEN c.denial_flag THEN 1 END) AS denied_claims,\\n  (COUNT(CASE WHEN c.denial_flag THEN 1 END) / COUNT(c.claim_id) * 100) AS denial_rate\\nFROM\\n  claims AS c\\n  JOIN payers AS py ON c.payer_key = py.payer_key\\nGROUP BY\\n  py.payer_name\\nORDER BY\\n  denial_rate DESC","use_as_onboarding_question":false,"verified_by":"System","verified_at":1704067200}]}');
@@ -166,19 +165,18 @@ tables (
         comment='RCM staff handling denials and appeals'
 )
 relationships (
-    DENIALS_TO_CLAIMS as DENIALS_FACT(CLAIM_ID) references CLAIMS_FACT(CLAIM_ID),
-    DENIALS_TO_PROVIDERS as DENIALS_FACT(PROVIDER_KEY) references HEALTHCARE_PROVIDERS_DIM(PROVIDER_KEY),
-    DENIALS_TO_PAYERS as DENIALS_FACT(PAYER_KEY) references PAYERS_DIM(PAYER_KEY),
-    DENIALS_TO_REASONS as DENIALS_FACT(DENIAL_REASON_KEY) references DENIAL_REASONS_DIM(DENIAL_REASON_KEY),
-    DENIALS_TO_APPEALS as DENIALS_FACT(APPEAL_KEY) references APPEALS_DIM(APPEAL_KEY),
-    DENIALS_TO_EMPLOYEES as DENIALS_FACT(EMPLOYEE_KEY) references RCM_EMPLOYEES_DIM(EMPLOYEE_KEY)
+    DENIALS_TO_CLAIMS: DENIALS_FACT(CLAIM_ID) references CLAIMS_FACT(CLAIM_ID),
+    DENIALS_TO_PROVIDERS: DENIALS_FACT(PROVIDER_KEY) references HEALTHCARE_PROVIDERS_DIM(PROVIDER_KEY),
+    DENIALS_TO_PAYERS: DENIALS_FACT(PAYER_KEY) references PAYERS_DIM(PAYER_KEY),
+    DENIALS_TO_REASONS: DENIALS_FACT(DENIAL_REASON_KEY) references DENIAL_REASONS_DIM(DENIAL_REASON_KEY),
+    DENIALS_TO_APPEALS: DENIALS_FACT(APPEAL_KEY) references APPEALS_DIM(APPEAL_KEY),
+    DENIALS_TO_EMPLOYEES: DENIALS_FACT(EMPLOYEE_KEY) references RCM_EMPLOYEES_DIM(EMPLOYEE_KEY)
 )
 facts (
     DENIALS_FACT.DENIED_AMOUNT as denied_amount comment='Amount denied by payer',
     DENIALS_FACT.RECOVERED_AMOUNT as recovered_amount comment='Amount recovered through appeals',
     DENIALS_FACT.DAYS_TO_APPEAL as days_to_appeal comment='Days from denial to appeal submission',
-    DENIALS_FACT.DAYS_TO_RESOLUTION as days_to_resolution comment='Days from denial to final resolution',
-    1 as denial_record comment='Count of denials for volume metrics'
+    DENIALS_FACT.DAYS_TO_RESOLUTION as days_to_resolution comment='Days from denial to final resolution'
 )
 dimensions (
     -- Denial timing
@@ -221,24 +219,24 @@ dimensions (
 )
 metrics (
     -- Volume metrics
-    DENIALS_FACT.TOTAL_DENIALS as COUNT(denials_fact.denial_record) comment='Total number of denials',
-    DENIALS_FACT.APPEALED_DENIALS as COUNT(CASE WHEN denials_fact.days_to_appeal IS NOT NULL THEN denials_fact.denial_record END) comment='Number of denials that were appealed',
-    DENIALS_FACT.RESOLVED_DENIALS as COUNT(CASE WHEN denials_fact.days_to_resolution IS NOT NULL THEN denials_fact.denial_record END) comment='Number of resolved denials',
+    total_denials: COUNT(*) comment='Total number of denials',
+    appealed_denials: COUNT(CASE WHEN DENIALS_FACT.days_to_appeal IS NOT NULL THEN 1 END) comment='Number of denials that were appealed',
+    resolved_denials: COUNT(CASE WHEN DENIALS_FACT.days_to_resolution IS NOT NULL THEN 1 END) comment='Number of resolved denials',
     
     -- Financial metrics
-    DENIALS_FACT.TOTAL_DENIED_AMOUNT as SUM(denials_fact.denied_amount) comment='Total amount denied',
-    DENIALS_FACT.TOTAL_RECOVERED_AMOUNT as SUM(denials_fact.recovered_amount) comment='Total amount recovered through appeals',
-    DENIALS_FACT.AVERAGE_DENIED_AMOUNT as AVG(denials_fact.denied_amount) comment='Average amount per denial',
+    total_denied_amount: SUM(DENIALS_FACT.denied_amount) comment='Total amount denied',
+    total_recovered_amount: SUM(DENIALS_FACT.recovered_amount) comment='Total amount recovered through appeals',
+    average_denied_amount: AVG(DENIALS_FACT.denied_amount) comment='Average amount per denial',
     
     -- Performance metrics
-    DENIALS_FACT.APPEAL_RATE as (COUNT(CASE WHEN denials_fact.days_to_appeal IS NOT NULL THEN denials_fact.denial_record END) / COUNT(denials_fact.denial_record) * 100) comment='Percentage of denials that are appealed',
-    DENIALS_FACT.RECOVERY_RATE as (SUM(denials_fact.recovered_amount) / SUM(denials_fact.denied_amount) * 100) comment='Percentage of denied amount recovered',
-    DENIALS_FACT.AVERAGE_DAYS_TO_APPEAL as AVG(denials_fact.days_to_appeal) comment='Average days from denial to appeal',
-    DENIALS_FACT.AVERAGE_DAYS_TO_RESOLUTION as AVG(denials_fact.days_to_resolution) comment='Average days from denial to resolution',
+    appeal_rate: (COUNT(CASE WHEN DENIALS_FACT.days_to_appeal IS NOT NULL THEN 1 END) / COUNT(*) * 100) comment='Percentage of denials that are appealed',
+    recovery_rate: (SUM(DENIALS_FACT.recovered_amount) / SUM(DENIALS_FACT.denied_amount) * 100) comment='Percentage of denied amount recovered',
+    average_days_to_appeal: AVG(DENIALS_FACT.days_to_appeal) comment='Average days from denial to appeal',
+    average_days_to_resolution: AVG(DENIALS_FACT.days_to_resolution) comment='Average days from denial to resolution',
     
     -- Success metrics
-    DENIALS_FACT.SUCCESSFUL_APPEALS as COUNT(CASE WHEN denials_fact.appeal_outcome IN ('Approved', 'Partial') THEN denials_fact.denial_record END) comment='Number of successful appeals',
-    DENIALS_FACT.APPEAL_SUCCESS_RATE as (COUNT(CASE WHEN denials_fact.appeal_outcome IN ('Approved', 'Partial') THEN denials_fact.denial_record END) / COUNT(CASE WHEN denials_fact.days_to_appeal IS NOT NULL THEN denials_fact.denial_record END) * 100) comment='Percentage of appeals that are successful'
+    successful_appeals: COUNT(CASE WHEN DENIALS_FACT.appeal_outcome IN ('Approved', 'Partial') THEN 1 END) comment='Number of successful appeals',
+    appeal_success_rate: (COUNT(CASE WHEN DENIALS_FACT.appeal_outcome IN ('Approved', 'Partial') THEN 1 END) / COUNT(CASE WHEN DENIALS_FACT.days_to_appeal IS NOT NULL THEN 1 END) * 100) comment='Percentage of appeals that are successful'
 )
 comment='Comprehensive view for denials management and appeals analysis'
 with extension (CA='{"tables":[{"name":"DENIALS","dimensions":[{"name":"DENIAL_DATE","sample_values":["2024-01-15","2024-02-20","2024-03-10"]},{"name":"DENIAL_STATUS","sample_values":["Open","Under Review","Resolved"]},{"name":"APPEAL_OUTCOME","sample_values":["Approved","Denied","Partial"]}],"facts":[{"name":"DENIED_AMOUNT"},{"name":"RECOVERED_AMOUNT"},{"name":"DAYS_TO_APPEAL"}],"metrics":[{"name":"TOTAL_DENIALS"},{"name":"APPEAL_RATE"},{"name":"RECOVERY_RATE"}]},{"name":"DENIAL_REASONS","dimensions":[{"name":"DENIAL_CODE","sample_values":["CO-16","CO-11","CO-50","CO-18"]},{"name":"DENIAL_DESCRIPTION","sample_values":["Claim lacks information","Diagnosis inconsistent","Not medically necessary","Duplicate claim"]},{"name":"CATEGORY","sample_values":["Administrative","Clinical","Coverage"]}]}],"verified_queries":[{"name":"Top denial reasons","question":"What are the most common denial reasons and their financial impact?","sql":"SELECT\\n  dr.denial_code,\\n  dr.denial_description,\\n  COUNT(d.denial_id) AS denial_count,\\n  SUM(d.denied_amount) AS total_denied_amount\\nFROM\\n  denials AS d\\n  JOIN denial_reasons AS dr ON d.denial_reason_key = dr.denial_reason_key\\nGROUP BY\\n  dr.denial_code, dr.denial_description\\nORDER BY\\n  denial_count DESC","use_as_onboarding_question":true,"verified_by":"System","verified_at":1704067200}]}');
